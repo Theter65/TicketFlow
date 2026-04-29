@@ -1,0 +1,25 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Iniciar Sesión</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/static/css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <h1>Iniciar Sesión</h1>
+    <form method="POST" action="/login" style="text-align: center;">
+        <label for="password">Contraseña:</label><br>
+        <input type="password" id="password" name="password" required style="padding: 10px; border-radius: 6px; border: 1px solid #444; background: #3a3a3a; color: #e0e0e0;"><br><br>
+        <button type="submit"><i class="fas fa-lock"></i> Iniciar Sesión</button>
+    </form>
+    <p style="text-align: center;">Si olvidaste la contraseña, contacta al administrador.</p>
+    <div style="text-align: center; margin-top: 40px;">
+        <a href="/"><i class="fas fa-arrow-left"></i> Atrás</a>
+    </div>
+    <div class="logo-container" style="margin-top: 50px;">
+        <img src="/static/images/logo_square.png" alt="Logo Cuadrado" style="width: 150px; height: 150px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);">
+    </div>
+</body>
+</html>

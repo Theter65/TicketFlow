@@ -1,0 +1,551 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Control de Entradas</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="/static/css/styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"> <!-- Para iconos -->
+</head>
+<body>
+  <div class="logo-container top-logo">
+    <img src="/static/images/logo_top.png" alt="Logo Superior" class="logo">
+  </div>
+  <h1>Control de Entradas</h1>
+  <div id="logoutContainer" class="logout-container">
+    <a href="/logout"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a>
+  </div>
+  <div id="loginPrompt" class="login-prompt">
+    <p>No has iniciado sesión. <a href="/login">Iniciar Sesión</a> para acceder a funciones avanzadas.</p>
+  </div>
+  <section id="adminSections" class="admin-sections">
+    <section class="generate-section">
+      <h2>Generar códigos</h2>
+      <div class="input-container">
+        <div class="input-group">
+          <label for="num">Cantidad:</label>
+          <input id="num" type="number" value="1" min="1" max="10000">
+        </div>
+        <div class="input-group">
+          <label for="prefix">Prefijo:</label>
+          <input id="prefix" type="text" value="EVENTS">
+        </div>
+        <div class="input-group">
+          <label for="company">Empresa:</label>
+          <input id="company" type="text" value="">
+        </div>
+        <div class="input-group">
+          <label for="event">Evento:</label>
+          <input id="event" type="text" value="">
+        </div>
+        <div class="input-group">
+          <label for="address">Dirección:</label>
+          <input id="address" type="text" value="">
+        </div>
+        <div class="input-group">
+          <label for="background">Imagen de Fondo:</label>
+          <input id="background" type="file" accept="image/*">
+        </div>
+        <div class="input-group use-background">
+          <label>
+            <input type="checkbox" id="use_background" checked> Usar Fondo
+          </label>
+        </div>
+        <div class="input-group">
+          <label>
+            <input type="checkbox" id="solo_qr"> Solo QR (sin texto ni layout)
+          </label>
+        </div>
+        <div class="input-group">
+          <label>
+            <input type="checkbox" id="show_entry_number" checked> Mostrar Número de Entrada
+          </label>
+        </div>
+        <div class="input-group">
+          <label for="text_color">Color de Texto:</label>
+          <select id="text_color" class="color-select">
+            <option value="black">Negro</option>
+            <option value="white">Blanco</option>
+            <option value="gray">Gris</option>
+            <option value="red">Rojo</option>
+            <option value="green">Verde</option>
+            <option value="blue">Azul</option>
+            <option value="yellow">Amarillo</option>
+            <option value="cyan">Cian</option>
+            <option value="magenta">Magenta</option>
+            <option value="orange">Naranja</option>
+          </select>
+        </div>
+        <div class="input-group">
+          <label for="transparency">Transparencia (0.0-1.0):</label>
+          <input id="transparency" type="number" step="0.1" min="0.0" max="1.0" value="1.0">
+        </div>
+        <div class="input-group">
+          <label for="qr_x_pos">Posición X del QR (0-1):</label>
+          <input id="qr_x_pos" type="number" step="0.1" min="0" max="1" value="0.5">
+        </div>
+        <div class="input-group">
+          <label for="qr_y_pos">Posición Y del QR (0-1):</label>
+          <input id="qr_y_pos" type="number" step="0.1" min="0" max="1" value="0.5">
+        </div>
+        <div class="input-group">
+          <label for="qr_scale">Escala del QR (0-1):</label>
+          <input id="qr_scale" type="number" step="0.1" min="0" max="1" value="0.5">
+        </div>
+        <div class="input-group">
+          <label for="qr_box_size">Tamaño base del QR:</label>
+          <input id="qr_box_size" type="number" value="10" min="1" max="50">
+        </div>
+        <div class="input-group">
+          <label for="qr_fill_color">Color de caracteres QR:</label>
+          <select id="qr_fill_color">
+            <option value="black">Negro</option>
+            <option value="white">Blanco</option>
+            <option value="gray">Gris</option>
+            <option value="red">Rojo</option>
+            <option value="green">Verde</option>
+            <option value="blue">Azul</option>
+            <option value="yellow">Amarillo</option>
+            <option value="cyan">Cian</option>
+            <option value="magenta">Magenta</option>
+            <option value="orange">Naranja</option>
+          </select>
+        </div>
+        <div class="input-group">
+          <label for="qr_back_color">Color de fondo QR:</label>
+          <select id="qr_back_color">
+            <option value="white">Blanco</option>
+            <option value="black">Negro</option>
+            <option value="gray">Gris</option>
+            <option value="red">Rojo</option>
+            <option value="green">Verde</option>
+            <option value="blue">Azul</option>
+            <option value="yellow">Amarillo</option>
+            <option value="cyan">Cian</option>
+            <option value="magenta">Magenta</option>
+            <option value="orange">Naranja</option>
+            <option value="transparent">Transparente</option>
+          </select>
+        </div>
+        <div class="input-group">
+          <label for="rotate_qr">Rotación QR (grados):</label>
+          <select id="rotate_qr">
+            <option value="0">0°</option>
+            <option value="90">90°</option>
+            <option value="180">180°</option>
+            <option value="270">270°</option>
+          </select>
+        </div>
+        <div class="input-group">
+          <label>
+            <input type="checkbox" id="preview_mode"> Modo Vista Previa (mitad de resolución)
+          </label>
+        </div>
+      </div>
+      <button id="gen" class="generate-btn"><i class="fas fa-plus"></i> Generar</button>
+      <div id="genResult" class="result-text"></div>
+      <button id="resetBtn" class="delete-btn"><i class="fas fa-sync"></i> Resetear Contadores</button>
+      <button id="deleteAllBtn" class="delete-btn"><i class="fas fa-trash"></i> Borrar Todo</button>
+    </section>
+    <section class="codes-section">
+      <h2>Lista de códigos</h2>
+      <button id="toggleListBtn" class="toggle-btn"><i class="fas fa-list"></i> Mostrar Lista</button>
+      <ul id="codesList" class="codes-list" style="display: none;"></ul>
+    </section>
+  </section>
+  <section class="scanner-section" style="display: block;">
+    <h2>Escáner (usa cámara)</h2>
+    <div class="video-container default-style">
+      <video id="video" muted></video>
+      <!-- Removed static scan-region-highlight to avoid duplication -->
+    </div>
+    <div class="scanner-controls">
+      <div class="input-group">
+        <label for="highlightStyle">Estilo de resaltado:</label>
+        <select id="highlightStyle">
+          <option value="default-style" selected>Estilo por defecto</option>
+          <option value="example-style-1">Estilo personalizado 1</option>
+          <option value="example-style-2">Estilo personalizado 2</option>
+        </select>
+      </div>
+      <div class="input-group">
+        <label for="inversionMode">Modo de escaneo:</label>
+        <select id="inversionMode">
+          <option value="original" selected>Escaneo original</option>
+          <option value="invert">Escaneo con colores invertidos</option>
+          <option value="both">Escáner ambos</option>
+        </select>
+      </div>
+      <div class="input-group">
+        <label for="cameraSelect">Cámara:</label>
+        <select id="cameraSelect">
+          <!-- Opciones se poblarán dinámicamente -->
+        </select>
+      </div>
+      <button id="flashButton" class="flash-btn">Encender Flash</button>
+    </div>
+    <div id="scanResult" class="scan-result">Estado: esperando...</div>
+    <button id="startScan" class="scan-btn"><i class="fas fa-camera"></i> Iniciar cámara</button>
+    <button id="stopScan" class="scan-btn" disabled><i class="fas fa-stop"></i> Detener cámara</button>
+  </section>
+  <div class="logo-container bottom-logo">
+    <img src="/static/images/logo_bottom.png" alt="Logo Inferior" class="logo square-logo">
+  </div>
+  <div id="scanModal" class="modal">
+    <div class="modal-content">
+      <div id="modalHeader" class="modal-header">Permiso Concedido</div>
+      <div class="modal-body">
+        <p><strong>Código:</strong> <span id="modalCodeText"></span></p>
+        <p><strong>Entrada:</strong> <span id="modalEntryNumber"></span> / <span id="modalTotalEntries"></span></p>
+        <p id="modalReason" class="modal-reason"></p>
+      </div>
+      <div class="modal-footer">
+        <button id="acceptBtn" class="modal-btn">Aceptar</button>
+      </div>
+    </div>
+  </div>
+  <div id="resetModal" class="modal">
+    <div class="modal-content">
+      <p>¿Estás seguro de que quieres resetear todos los contadores? Esto borrará los registros de escaneo.</p>
+      <button id="acceptResetBtn" class="btn-accept">Aceptar</button>
+      <button id="cancelResetBtn" class="btn-cancel">Cancelar</button>
+    </div>
+  </div>
+  <div id="deleteModal" class="modal">
+    <div class="modal-content">
+      <p>¿Estás seguro de que quieres borrar toda la base de datos y las fotos QR? Esta acción es irreversible.</p>
+      <button id="acceptDeleteBtn" class="btn-accept">Aceptar</button>
+      <button id="cancelDeleteBtn" class="btn-cancel">Cancelar</button>
+    </div>
+  </div>
+  <script type="module">
+    import QrScanner from "/static/js/qr-scanner.min.js";
+    const video = document.getElementById('video');
+    const videoContainer = document.querySelector('.video-container');
+    const startBtn = document.getElementById('startScan');
+    const stopBtn = document.getElementById('stopScan');
+    const scanResult = document.getElementById('scanResult');
+    const loginPrompt = document.getElementById('loginPrompt');
+    const adminSections = document.getElementById('adminSections');
+    const logoutContainer = document.getElementById('logoutContainer');
+    const scanModal = document.getElementById('scanModal');
+    const modalHeader = document.getElementById('modalHeader');
+    const modalCodeText = document.getElementById('modalCodeText');
+    const modalEntryNumber = document.getElementById('modalEntryNumber');
+    const modalTotalEntries = document.getElementById('modalTotalEntries');
+    const modalReason = document.getElementById('modalReason');
+    const acceptBtn = document.getElementById('acceptBtn');
+    const resetBtn = document.getElementById('resetBtn');
+    const resetModal = document.getElementById('resetModal');
+    const acceptResetBtn = document.getElementById('acceptResetBtn');
+    const cancelResetBtn = document.getElementById('cancelResetBtn');
+    const deleteAllBtn = document.getElementById('deleteAllBtn');
+    const deleteModal = document.getElementById('deleteModal');
+    const acceptDeleteBtn = document.getElementById('acceptDeleteBtn');
+    const cancelDeleteBtn = document.getElementById('cancelDeleteBtn');
+    const toggleListBtn = document.getElementById('toggleListBtn');
+    const codesList = document.getElementById('codesList');
+    const numInput = document.getElementById('num');
+    const prefixInput = document.getElementById('prefix');
+    const companyInput = document.getElementById('company');
+    const eventInput = document.getElementById('event');
+    const addressInput = document.getElementById('address');
+    const backgroundInput = document.getElementById('background');
+    const useBackgroundInput = document.getElementById('use_background');
+    const soloQrInput = document.getElementById('solo_qr');
+    const showEntryNumberInput = document.getElementById('show_entry_number');
+    const textColorSelect = document.getElementById('text_color');
+    const transparencyInput = document.getElementById('transparency');
+    const qrXPosInput = document.getElementById('qr_x_pos');
+    const qrYPosInput = document.getElementById('qr_y_pos');
+    const qrScaleInput = document.getElementById('qr_scale');
+    const qrBoxSizeInput = document.getElementById('qr_box_size');
+    const qrFillColorSelect = document.getElementById('qr_fill_color');
+    const qrBackColorSelect = document.getElementById('qr_back_color');
+    const rotateQrSelect = document.getElementById('rotate_qr');
+    const previewModeInput = document.getElementById('preview_mode');
+
+    // Nuevos elementos para controles del escáner
+    const highlightStyleSelect = document.getElementById('highlightStyle');
+    const inversionModeSelect = document.getElementById('inversionMode');
+    const cameraSelect = document.getElementById('cameraSelect');
+    const flashButton = document.getElementById('flashButton');
+
+    let qrScannerInstance = null;
+    let lastSeen = null;
+    let availableCameras = [];
+    let flashSupported = false;
+    let flashOn = false;
+
+    // Inicializar el estado de la lista al cargar la página
+    codesList.style.display = 'none';
+    toggleListBtn.textContent = 'Mostrar Lista';
+
+    function checkAuth() {
+      fetch('/check-auth').then(r => r.json()).then(data => {
+        const level = data.level;
+        if (level === 'none') {
+          loginPrompt.style.display = 'block';
+          adminSections.style.display = 'none';
+          logoutContainer.style.display = 'none';
+          resetBtn.style.display = 'none';
+          deleteAllBtn.style.display = 'none';
+          toggleListBtn.style.display = 'none';
+        } else if (level === 'admin') {
+          loginPrompt.style.display = 'none';
+          adminSections.style.display = 'block';
+          logoutContainer.style.display = 'block';
+          resetBtn.style.display = 'inline-block';
+          deleteAllBtn.style.display = 'inline-block';
+          toggleListBtn.style.display = 'inline-block';
+        }
+      });
+    }
+    checkAuth();
+    setInterval(checkAuth, 60000);
+
+    function fetchCodes() {
+      fetch('/codes').then(r => r.json()).then(list => {
+        const ul = document.getElementById('codesList');
+        ul.innerHTML = '';
+        list.forEach(c => {
+          const li = document.createElement('li');
+          const a = document.createElement('a');
+          a.href = `/codes/${encodeURIComponent(c.filename)}`;
+          a.textContent = `${c.code_text} (Entrada ${c.entry_number}/${c.batch_size}, ${c.scan_count} escaneos)`;
+          a.target = '_blank';
+          li.appendChild(a);
+          ul.appendChild(li);
+        });
+      }).catch(() => {});
+    }
+
+    document.getElementById('gen').addEventListener('click', () => {
+      const formData = new FormData();
+      formData.append('n', numInput.value);
+      formData.append('prefix', prefixInput.value || 'AMIGOS');
+      formData.append('company', companyInput.value || '');
+      formData.append('event', eventInput.value || '');
+      formData.append('address', addressInput.value || '');
+      formData.append('text_color', textColorSelect.value);
+      formData.append('use_background', useBackgroundInput.checked);
+      formData.append('solo_qr', soloQrInput.checked);
+      formData.append('show_entry_number', showEntryNumberInput.checked);
+      formData.append('transparency', transparencyInput.value || '0.5');
+      formData.append('qr_x_pos', qrXPosInput.value);
+      formData.append('qr_y_pos', qrYPosInput.value);
+      formData.append('qr_scale', qrScaleInput.value);
+      formData.append('qr_box_size', qrBoxSizeInput.value);
+      formData.append('qr_fill_color', qrFillColorSelect.value);
+      formData.append('qr_back_color', qrBackColorSelect.value);
+      formData.append('rotate_qr', rotateQrSelect.value);
+      formData.append('preview_mode', previewModeInput.checked);
+      if (backgroundInput.files.length > 0) {
+        formData.append('background', backgroundInput.files[0]);
+      }
+
+      fetch('/generate', { method: 'POST', body: formData })
+        .then(r => r.json())
+        .then(res => {
+          document.getElementById('genResult').textContent = `Creados: ${res.count || 0}`;
+          fetchCodes();
+        })
+        .catch(() => {});
+    });
+
+    toggleListBtn.addEventListener('click', () => {
+      if (codesList.style.display === 'none') {
+        fetchCodes();
+        codesList.style.display = 'block';
+        toggleListBtn.textContent = 'Ocultar Lista';
+      } else {
+        codesList.style.display = 'none';
+        toggleListBtn.textContent = 'Mostrar Lista';
+      }
+    });
+
+    // Función para inicializar el escáner
+    async function startQrScanner() {
+      try {
+        qrScannerInstance = new QrScanner(
+          video,
+          result => onDecoded(result),
+          {
+            highlightScanRegion: true,
+            highlightCodeOutline: true,
+          }
+        );
+
+        // Establecer modo de inversión por defecto (original)
+        qrScannerInstance.setInversionMode(inversionModeSelect.value);
+
+        await qrScannerInstance.start();
+        scanResult.textContent = 'Cámara activa. Apunta al QR.';
+
+        // Verificar y configurar flash
+        flashSupported = await qrScannerInstance.hasFlash();
+        if (!flashSupported) {
+          flashButton.disabled = true;
+          flashButton.style.opacity = 0.5;
+        } else {
+          flashButton.disabled = false;
+          flashButton.style.opacity = 1;
+          flashButton.textContent = 'Encender Flash';
+        }
+
+        // Poblar lista de cámaras
+        availableCameras = await QrScanner.listCameras(true);
+        cameraSelect.innerHTML = '';
+        availableCameras.forEach((camera, index) => {
+          const option = document.createElement('option');
+          option.value = camera.id;
+          option.textContent = camera.label || `Cámara ${index + 1}`;
+          cameraSelect.appendChild(option);
+        });
+
+        stopBtn.disabled = false;
+      } catch (err) {
+        scanResult.textContent = 'Error al iniciar la cámara: ' + err.message;
+        console.error(err);
+      }
+    }
+
+    startBtn.addEventListener('click', startQrScanner);
+
+    stopBtn.addEventListener('click', () => {
+      if (qrScannerInstance) {
+        qrScannerInstance.stop();
+        qrScannerInstance.destroy();
+        qrScannerInstance = null;
+        scanResult.textContent = 'Cámara detenida.';
+        stopBtn.disabled = true;
+        flashOn = false;
+        flashButton.textContent = 'Encender Flash';
+      } else {
+        scanResult.textContent = 'Cámara ya detenida.';
+      }
+    });
+
+    // Event listeners para controles del escáner
+    highlightStyleSelect.addEventListener('change', (e) => {
+      videoContainer.className = `video-container ${e.target.value}`;
+      if (qrScannerInstance) {
+        qrScannerInstance._updateOverlay(); // Reposicionar el highlight
+      }
+    });
+
+    inversionModeSelect.addEventListener('change', () => {
+      if (qrScannerInstance) {
+        qrScannerInstance.setInversionMode(inversionModeSelect.value);
+      }
+    });
+
+    cameraSelect.addEventListener('change', async () => {
+      if (qrScannerInstance && cameraSelect.value) {
+        try {
+          await qrScannerInstance.setCamera(cameraSelect.value);
+          // Actualizar soporte de flash
+          flashSupported = await qrScannerInstance.hasFlash();
+          flashButton.disabled = !flashSupported;
+          flashButton.style.opacity = flashSupported ? 1 : 0.5;
+          if (!flashSupported) {
+            flashOn = false;
+            flashButton.textContent = 'Encender Flash';
+          }
+        } catch (err) {
+          console.error('Error al cambiar cámara:', err);
+        }
+      }
+    });
+
+    flashButton.addEventListener('click', async () => {
+      if (qrScannerInstance && flashSupported) {
+        if (flashOn) {
+          await qrScannerInstance.turnFlashOff();
+          flashButton.textContent = 'Encender Flash';
+          flashOn = false;
+        } else {
+          await qrScannerInstance.turnFlashOn();
+          flashButton.textContent = 'Apagar Flash';
+          flashOn = true;
+        }
+      }
+    });
+
+    function showModal(result, message, codeText, entryNumber, totalEntries, reason) {
+      modalHeader.textContent = result === 'concedido' ? 'Permiso Concedido' : 'Permiso Denegado';
+      modalHeader.style.backgroundColor = result === 'concedido' ? '#28a745' : '#dc3545';
+      modalCodeText.textContent = codeText || 'N/A';
+      if (entryNumber && totalEntries) {
+        modalEntryNumber.textContent = entryNumber;
+        modalTotalEntries.textContent = totalEntries;
+        document.querySelector('p:has(#modalEntryNumber)').style.display = 'block';
+      } else {
+        document.querySelector('p:has(#modalEntryNumber)').style.display = 'none';
+      }
+      modalReason.textContent = reason || '';
+      modalReason.style.display = reason ? 'block' : 'none';
+      scanModal.style.display = 'flex'; // Changed to flex for better centering
+    }
+
+    function hideModal() {
+      scanModal.style.display = 'none';
+    }
+
+    acceptBtn.addEventListener('click', () => {
+      hideModal();
+      if (qrScannerInstance) {
+        qrScannerInstance.start();
+      }
+      lastSeen = null;
+      scanResult.textContent = 'Estado: esperando...';
+    });
+
+    function showResetModal() { resetModal.style.display = 'flex'; }
+    function hideResetModal() { resetModal.style.display = 'none'; }
+    acceptResetBtn.addEventListener('click', () => {
+      fetch('/reset', { method: 'POST' }).then(r => r.json()).then(res => {
+        alert('Contadores reseteados con éxito!');
+        fetchCodes();
+      }).catch(err => alert('Error al resetear'));
+      hideResetModal();
+    });
+    cancelResetBtn.addEventListener('click', hideResetModal);
+    resetBtn.addEventListener('click', showResetModal);
+
+    function showDeleteModal() { deleteModal.style.display = 'flex'; }
+    function hideDeleteModal() { deleteModal.style.display = 'none'; }
+    acceptDeleteBtn.addEventListener('click', () => {
+      fetch('/delete_all', { method: 'POST' }).then(r => r.json()).then(res => {
+        alert('Base de datos y fotos QR borradas con éxito!');
+        fetchCodes();
+      }).catch(err => alert('Error al borrar'));
+      hideDeleteModal();
+    });
+    cancelDeleteBtn.addEventListener('click', hideDeleteModal);
+    deleteAllBtn.addEventListener('click', showDeleteModal);
+
+    async function onDecoded(result) {
+      const text = typeof result === 'string' ? result : result.data;
+      if (lastSeen === text) return;
+      lastSeen = text;
+      scanResult.textContent = `Leído: ${text} -> consultando servidor...`;
+      try {
+        if (qrScannerInstance) qrScannerInstance.stop();
+        const r = await fetch('/scan', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({code: text}) });
+        const res = await r.json();
+        const reason = res.reason || res.message || '';
+        showModal(res.result, res.message, res.code_text, res.entry_number, res.total_entries, reason);
+        scanResult.textContent = 'Estado: esperando...';
+      } catch (err) {
+        showModal('denegado', '', '', '', '', 'Error comunicando con servidor');
+        console.error(err);
+        scanResult.textContent = 'Estado: esperando...';
+      }
+    }
+
+    // Iniciar la cámara automáticamente al cargar la página
+    window.addEventListener('load', startQrScanner);
+  </script>
+</body>
+</html>
