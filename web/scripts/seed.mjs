@@ -51,7 +51,7 @@ async function run() {
       const insUser = await client.query(
         `INSERT INTO users (organization_id, name, email, password_hash, role)
          VALUES ($1, $2, $3, $4, $5) RETURNING id`,
-        [orgId, 'Gerardo Gonza (Theter)', adminEmail, passHash, 'superadmin']
+        [orgId, 'Gerardo Gonza', adminEmail, passHash, 'superadmin']
       );
       console.log("Created SuperAdmin User:", adminEmail, "(ID:", insUser.rows[0].id, ")");
     } else {
