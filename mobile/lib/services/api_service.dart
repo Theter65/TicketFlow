@@ -3,8 +3,8 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiService {
-  // URL por defecto (puede cambiarse en ajustes de la app para apuntar a la Pi local o a Vercel)
-  static String baseUrl = 'https://access.datelar.com/api';
+  // URL por defecto para Raspberry Pi en la red local UNL
+  static String baseUrl = 'http://192.168.101.21:3000/api';
 
   static Future<void> setCustomBaseUrl(String url) async {
     baseUrl = url;
@@ -18,6 +18,25 @@ class ApiService {
     if (saved != null && saved.isNotEmpty) {
       baseUrl = saved;
     }
+  }
+
+  static Future<Map<String, dynamic>?> getCurrentUser() async {
+    final prefs = await SharedPreferences.getInstance();
+    final raw = prefs.getString('user_data');
+    if (raw != null) {
+      try {
+        return jsonDecode(raw);
+      } catch (_) {
+        return null;
+      }
+    }
+    return null;
+  }
+
+  static Future<void> logout() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('jwt_token');
+    await prefs.remove('user_data');
   }
 
   // 1. Iniciar Sesión (Organizador o Validador)

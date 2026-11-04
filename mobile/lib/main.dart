@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'screens/events_screen.dart';
+import 'screens/login_screen.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const DatelarAccessApp());
 }
 
@@ -23,7 +24,7 @@ class DatelarAccessApp extends StatelessWidget {
         ),
         fontFamily: 'Roboto',
       ),
-      home: const EventsScreen(),
+      home: const LoginScreen(),
     );
   }
 }
