@@ -4,9 +4,9 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "Datelar Access | Control de Accesos & Boletería Digital",
   description:
-    "Plataforma de alta velocidad para control de acceso en eventos y emisión criptográfica de entradas. Producto de Datelar Labs.",
+    "Plataforma para control de accesos en eventos y emisión de entradas digitales. Producto de Datelar Labs.",
   icons: {
-    icon: "/brand/datelar-access/datelar-access-icon-white.svg",
+    icon: "/brand/datelar-access/datelar-access-icon-dark.svg",
   },
 };
 
@@ -16,11 +16,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="es" className="dark">
+    <html lang="es">
       <head>
-        <link rel="icon" href="/brand/datelar-access/datelar-access-icon-white.svg" type="image/svg+xml" />
+        <link rel="icon" href="/brand/datelar-access/datelar-access-icon-dark.svg" type="image/svg+xml" />
       </head>
-      <body className="min-h-screen bg-black text-white antialiased selection:bg-white selection:text-black">
+      <body className="min-h-screen bg-slate-50 text-slate-900 antialiased selection:bg-cyan-600 selection:text-white font-sans">
         {children}
       </body>
     </html>
