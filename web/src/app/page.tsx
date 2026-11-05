@@ -178,7 +178,7 @@ export default function DatelarAccessPage() {
             </svg>
             <div>
               <span className="text-sm font-semibold tracking-[0.25em] uppercase">DATELAR ACCESS</span>
-              <span className="block text-[9px] font-mono text-neutral-400">CONTROL DE AFORO & BOLETERÍA</span>
+              <span className="block text-[9px] font-mono text-neutral-400">DATELAR LABS &middot; POR GERARDO GONZA</span>
             </div>
           </div>
 
@@ -583,6 +583,10 @@ export default function DatelarAccessPage() {
           </div>
         </div>
       </section>
+      {/* Footer Branding */}
+      <footer className="w-full bg-black py-8 px-6 md:px-12 border-t border-white/10 text-center text-xs font-mono text-neutral-500">
+        DATELAR ACCESS &middot; PRODUCTO DE DATELAR LABS CREADO POR GERARDO GONZA &middot; {new Date().getFullYear()}
+      </footer>
     </div>
   );
 }
