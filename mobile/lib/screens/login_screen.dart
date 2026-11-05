@@ -302,7 +302,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                 const SizedBox(height: 40),
                 const Text(
-                  "Datelar Labs // Creado por Gerardo Gonza",
+                  "Datelar Access // Producto de Datelar Labs",
                   textAlign: TextAlign.center,
                   style: TextStyle(color: Colors.white24, fontSize: 11),
                 ),
