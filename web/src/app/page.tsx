@@ -19,14 +19,18 @@ import {
   X, 
   ArrowRight,
   ArrowLeft,
-  Sparkles,
   KeyRound,
   Check,
   Building2,
   MapPin,
   ScanLine,
-  ChevronRight
+  ChevronRight,
+  Timer,
+  Fingerprint,
+  BarChart3,
+  Sparkles
 } from "lucide-react";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 export default function DatelarAccessStandalonePortal() {
   // Estado de sesión
@@ -63,7 +67,7 @@ export default function DatelarAccessStandalonePortal() {
       location: "Campus Universitario Guillermo Falconí, Loja",
       date: "20 al 22 de Noviembre, 2026",
       status: "EVENTO EN GESTIÓN",
-      statusColor: "text-emerald-700 bg-emerald-50 border-emerald-200",
+      statusColor: "text-emerald-400 bg-emerald-950/40 border-emerald-500/40 dark:text-emerald-400 text-emerald-700 bg-emerald-50 border-emerald-200",
       capacity: 650,
       total_issued: 500,
       total_scanned: 1,
@@ -79,7 +83,7 @@ export default function DatelarAccessStandalonePortal() {
       location: "Teatro Benjamín Carrión, Loja",
       date: "Diciembre 2026",
       status: "PRÓXIMO EVENTO",
-      statusColor: "text-cyan-700 bg-cyan-50 border-cyan-200",
+      statusColor: "text-cyan-400 bg-cyan-950/40 border-cyan-500/40 dark:text-cyan-400 text-cyan-700 bg-cyan-50 border-cyan-200",
       capacity: 1200,
       total_issued: 850,
       total_scanned: 0,
@@ -95,7 +99,7 @@ export default function DatelarAccessStandalonePortal() {
       location: "Centro de Convenciones, Ecuador",
       date: "Edición Anual Realizada",
       status: "FINALIZADO",
-      statusColor: "text-slate-600 bg-slate-100 border-slate-200",
+      statusColor: "text-neutral-400 bg-neutral-900 border-neutral-700 dark:text-neutral-400 text-slate-600 bg-slate-100 border-slate-200",
       capacity: 450,
       total_issued: 450,
       total_scanned: 432,
@@ -303,7 +307,7 @@ export default function DatelarAccessStandalonePortal() {
       location: newEventLocation || "Por definir",
       date: "Próximamente",
       status: "PRÓXIMO EVENTO",
-      statusColor: "text-cyan-700 bg-cyan-50 border-cyan-200",
+      statusColor: "text-cyan-400 bg-cyan-950/40 border-cyan-500/40",
       capacity: Number(newEventCapacity) || 500,
       total_issued: 0,
       total_scanned: 0,
@@ -319,37 +323,46 @@ export default function DatelarAccessStandalonePortal() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 selection:bg-cyan-600 selection:text-white font-sans">
-      {/* BARRA SUPERIOR INTEGRADA */}
-      <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200">
+    <div className="min-h-screen bg-slate-50 dark:bg-black text-slate-900 dark:text-white selection:bg-cyan-600 selection:text-white font-sans transition-colors duration-200">
+      {/* BARRA SUPERIOR INTEGRADA CON SELECTOR DE TEMA */}
+      <header className="sticky top-0 z-40 bg-white/95 dark:bg-black/85 backdrop-blur-md border-b border-slate-200 dark:border-white/10 transition-colors">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-12 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <a href="#" className="flex items-center gap-2.5 group">
-              <div className="w-8 h-8 rounded-lg bg-slate-100 border border-slate-200 flex items-center justify-center p-1.5 shadow-sm group-hover:border-cyan-500 transition">
+              <div className="w-8 h-8 rounded-lg bg-slate-100 dark:bg-neutral-900 border border-slate-200 dark:border-neutral-800 flex items-center justify-center p-1.5 shadow-sm group-hover:border-cyan-500 transition">
                 <Image
                   src="/brand/datelar-access/datelar-access-icon-dark.svg"
                   alt="Datelar Access"
                   width={28}
                   height={28}
-                  className="w-full h-full object-contain"
+                  className="w-full h-full object-contain dark:hidden"
+                />
+                <Image
+                  src="/brand/datelar-access/datelar-access-icon-white.svg"
+                  alt="Datelar Access"
+                  width={28}
+                  height={28}
+                  className="w-full h-full object-contain hidden dark:block"
                 />
               </div>
               <div className="flex flex-col">
-                <span className="text-base font-bold tracking-tight text-slate-900 leading-none">
-                  DATELAR <span className="text-cyan-600">ACCESS</span>
+                <span className="text-base font-bold tracking-tight text-slate-900 dark:text-white leading-none">
+                  DATELAR <span className="text-cyan-600 dark:text-cyan-400">ACCESS</span>
                 </span>
-                <span className="text-[10px] font-medium text-slate-500 tracking-wide mt-0.5">
+                <span className="text-[10px] font-medium text-slate-500 dark:text-neutral-400 tracking-wide mt-0.5">
                   Producto de Datelar Labs
                 </span>
               </div>
             </a>
           </div>
 
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3">
+            <ThemeToggle />
+
             {currentUser && (
               <button
                 onClick={handleLogout}
-                className="border border-slate-300 bg-white hover:bg-slate-100 px-3 py-1.5 text-xs font-semibold text-slate-700 rounded-lg transition flex items-center gap-1.5 shadow-sm"
+                className="border border-slate-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 hover:bg-slate-100 dark:hover:bg-neutral-800 px-3 py-1.5 text-xs font-semibold text-slate-700 dark:text-neutral-200 rounded-lg transition flex items-center gap-1.5 shadow-sm"
               >
                 <LogOut className="h-3.5 w-3.5" />
                 <span className="hidden sm:inline">Cerrar Sesión</span>
@@ -361,77 +374,84 @@ export default function DatelarAccessStandalonePortal() {
 
       {/* VISTA PORTAL DIRECTA: INFORMACIÓN Y LOGIN INMEDIATO */}
       {!currentUser ? (
-        <main className="max-w-7xl mx-auto px-4 sm:px-6 md:px-12 py-10 sm:py-16">
-          <div className="grid lg:grid-cols-12 gap-10 items-center">
+        <main className="max-w-7xl mx-auto px-4 sm:px-6 md:px-12 py-8 sm:py-14">
+          <div className="grid lg:grid-cols-12 gap-8 lg:gap-12 items-center">
             {/* LADO IZQUIERDO: INFORMACIÓN COMPACTA Y BENEFICIOS */}
             <div className="lg:col-span-6 space-y-6">
-              <div className="inline-flex items-center gap-2 border border-cyan-200 bg-cyan-50 px-3 py-1 rounded-full text-xs font-medium text-cyan-800">
-                <Sparkles className="h-3.5 w-3.5 text-cyan-600" />
-                <span>Control de Acceso Digital &middot; 100% Conectado</span>
-              </div>
-
               <div className="space-y-3">
-                <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-slate-900 leading-tight">
+                <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-slate-900 dark:text-white leading-tight">
                   Control de acceso inteligente y venta de entradas.
                 </h1>
 
-                {/* Texto favorito */}
-                <p className="text-base sm:text-lg text-slate-600 font-normal leading-relaxed">
+                {/* Texto favorito del usuario */}
+                <p className="text-base sm:text-lg text-slate-600 dark:text-neutral-300 font-normal leading-relaxed">
                   La plataforma definitiva para conciertos, congresos, festivales y discotecas. Emite boletos digitales con código QR único, controla el aforo en tiempo real y valida entradas en segundos desde nuestra app para <strong>Android</strong>.
                 </p>
               </div>
 
-              {/* 4 Beneficios en formato compacto */}
-              <div className="grid sm:grid-cols-2 gap-3 pt-2">
-                <div className="border border-slate-200 bg-white p-3.5 rounded-xl shadow-sm space-y-1">
-                  <div className="flex items-center gap-2 text-cyan-600 font-bold text-xs">
-                    <Zap className="h-4 w-4" />
-                    <span>&lt; 1 Segundo</span>
+              {/* 4 Beneficios en formato compacto con iconos estilizados */}
+              <div className="grid sm:grid-cols-2 gap-3 pt-1">
+                {/* 1. Rapidez */}
+                <div className="border border-slate-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 p-4 rounded-xl shadow-sm space-y-2 hover:border-cyan-500/50 transition">
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-lg flex items-center justify-center bg-cyan-50 dark:bg-cyan-950/60 border border-cyan-200 dark:border-cyan-800/60 text-cyan-600 dark:text-cyan-400">
+                      <Timer className="h-4 w-4" />
+                    </div>
+                    <span className="font-bold text-sm text-slate-900 dark:text-white">&lt; 1 Segundo</span>
                   </div>
-                  <p className="text-xs text-slate-500">Ingreso ágil sin filas en las puertas.</p>
+                  <p className="text-xs text-slate-600 dark:text-neutral-400">Ingreso ágil sin filas en las puertas.</p>
                 </div>
 
-                <div className="border border-slate-200 bg-white p-3.5 rounded-xl shadow-sm space-y-1">
-                  <div className="flex items-center gap-2 text-emerald-600 font-bold text-xs">
-                    <ShieldCheck className="h-4 w-4" />
-                    <span>Cero Fraudes</span>
+                {/* 2. Cero Fraudes */}
+                <div className="border border-slate-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 p-4 rounded-xl shadow-sm space-y-2 hover:border-emerald-500/50 transition">
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-lg flex items-center justify-center bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-800/60 text-emerald-600 dark:text-emerald-400">
+                      <Fingerprint className="h-4 w-4" />
+                    </div>
+                    <span className="font-bold text-sm text-slate-900 dark:text-white">Cero Fraudes</span>
                   </div>
-                  <p className="text-xs text-slate-500">Códigos QR únicos infalsificables.</p>
+                  <p className="text-xs text-slate-600 dark:text-neutral-400">Códigos QR únicos infalsificables.</p>
                 </div>
 
-                <div className="border border-slate-200 bg-white p-3.5 rounded-xl shadow-sm space-y-1">
-                  <div className="flex items-center gap-2 text-blue-600 font-bold text-xs">
-                    <Users className="h-4 w-4" />
-                    <span>Aforo en Vivo</span>
+                {/* 3. Aforo en Vivo */}
+                <div className="border border-slate-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 p-4 rounded-xl shadow-sm space-y-2 hover:border-blue-500/50 transition">
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-lg flex items-center justify-center bg-blue-50 dark:bg-blue-950/60 border border-blue-200 dark:border-blue-800/60 text-blue-600 dark:text-blue-400">
+                      <BarChart3 className="h-4 w-4" />
+                    </div>
+                    <span className="font-bold text-sm text-slate-900 dark:text-white">Aforo en Vivo</span>
                   </div>
-                  <p className="text-xs text-slate-500">Control de capacidad en tiempo real.</p>
+                  <p className="text-xs text-slate-600 dark:text-neutral-400">Control de capacidad en tiempo real.</p>
                 </div>
 
-                <div className="border border-slate-200 bg-white p-3.5 rounded-xl shadow-sm space-y-1">
-                  <div className="flex items-center gap-2 text-cyan-600 font-bold text-xs">
-                    <Smartphone className="h-4 w-4" />
-                    <span>App Android</span>
+                {/* 4. App Android */}
+                <div className="border border-slate-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 p-4 rounded-xl shadow-sm space-y-2 hover:border-cyan-500/50 transition">
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-lg flex items-center justify-center bg-cyan-50 dark:bg-cyan-950/60 border border-cyan-200 dark:border-cyan-800/60 text-cyan-600 dark:text-cyan-400">
+                      <Smartphone className="h-4 w-4" />
+                    </div>
+                    <span className="font-bold text-sm text-slate-900 dark:text-white">App Android</span>
                   </div>
-                  <p className="text-xs text-slate-500">El personal escanea con su propio celular.</p>
+                  <p className="text-xs text-slate-600 dark:text-neutral-400">El personal escanea con su propio celular.</p>
                 </div>
               </div>
             </div>
 
             {/* LADO DERECHO: FORMULARIO DE ACCESO DIRECTO (DE UNA) */}
             <div className="lg:col-span-6 flex justify-center">
-              <div className="w-full max-w-md border border-slate-200 bg-white rounded-2xl shadow-xl p-6 sm:p-8 space-y-5">
+              <div className="w-full max-w-md border border-slate-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 rounded-2xl shadow-xl p-6 sm:p-8 space-y-5">
                 <div>
-                  <span className="text-[10px] text-cyan-600 font-bold uppercase tracking-wider">
+                  <span className="text-[10px] text-cyan-600 dark:text-cyan-400 font-bold uppercase tracking-wider">
                     Portal de Acceso
                   </span>
-                  <h2 className="text-2xl font-bold text-slate-900 mt-0.5">Ingresar al Sistema</h2>
-                  <p className="text-xs text-slate-500 mt-0.5">
+                  <h2 className="text-2xl font-bold text-slate-900 dark:text-white mt-0.5">Ingresar al Sistema</h2>
+                  <p className="text-xs text-slate-500 dark:text-neutral-400 mt-0.5">
                     Elige cómo deseas ingresar a Datelar Access.
                   </p>
                 </div>
 
                 {/* Selector de pestañas */}
-                <div className="grid grid-cols-2 gap-1 bg-slate-100 p-1 rounded-lg text-xs font-semibold">
+                <div className="grid grid-cols-2 gap-1 bg-slate-100 dark:bg-neutral-900 p-1 rounded-lg text-xs font-semibold">
                   <button
                     type="button"
                     onClick={() => {
@@ -440,8 +460,8 @@ export default function DatelarAccessStandalonePortal() {
                     }}
                     className={`py-2 rounded-md transition ${
                       loginTab === "admin"
-                        ? "bg-white text-slate-900 shadow-sm"
-                        : "text-slate-600 hover:text-slate-900"
+                        ? "bg-white dark:bg-neutral-800 text-slate-900 dark:text-white shadow-sm"
+                        : "text-slate-600 dark:text-neutral-400 hover:text-slate-900 dark:hover:text-white"
                     }`}
                   >
                     Administrador
@@ -454,8 +474,8 @@ export default function DatelarAccessStandalonePortal() {
                     }}
                     className={`py-2 rounded-md transition ${
                       loginTab === "portero"
-                        ? "bg-white text-slate-900 shadow-sm"
-                        : "text-slate-600 hover:text-slate-900"
+                        ? "bg-white dark:bg-neutral-800 text-slate-900 dark:text-white shadow-sm"
+                        : "text-slate-600 dark:text-neutral-400 hover:text-slate-900 dark:hover:text-white"
                     }`}
                   >
                     Personal de Puerta
@@ -463,7 +483,7 @@ export default function DatelarAccessStandalonePortal() {
                 </div>
 
                 {loginError && (
-                  <div className="p-3 bg-rose-50 border border-rose-200 rounded-lg text-rose-700 text-xs">
+                  <div className="p-3 bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800 text-rose-700 dark:text-rose-400 rounded-lg text-xs">
                     {loginError}
                   </div>
                 )}
@@ -472,37 +492,37 @@ export default function DatelarAccessStandalonePortal() {
                 {loginTab === "admin" && (
                   <form onSubmit={handleAdminLogin} className="space-y-3.5 text-xs">
                     <div className="space-y-1">
-                      <label className="text-slate-700 font-semibold">Correo Electrónico</label>
+                      <label className="text-slate-700 dark:text-neutral-300 font-semibold">Correo Electrónico</label>
                       <input
                         type="email"
                         required
                         value={loginEmail}
                         onChange={(e) => setLoginEmail(e.target.value)}
-                        className="w-full border border-slate-300 rounded-lg p-3 text-slate-900 focus:outline-none focus:border-cyan-600 text-sm"
+                        className="w-full border border-slate-300 dark:border-neutral-700 bg-white dark:bg-black rounded-lg p-3 text-slate-900 dark:text-white focus:outline-none focus:border-cyan-600 text-sm"
                       />
                     </div>
 
                     <div className="space-y-1">
-                      <label className="text-slate-700 font-semibold">Contraseña</label>
+                      <label className="text-slate-700 dark:text-neutral-300 font-semibold">Contraseña</label>
                       <input
                         type="password"
                         required
                         value={loginPassword}
                         onChange={(e) => setLoginPassword(e.target.value)}
-                        className="w-full border border-slate-300 rounded-lg p-3 text-slate-900 focus:outline-none focus:border-cyan-600 text-sm"
+                        className="w-full border border-slate-300 dark:border-neutral-700 bg-white dark:bg-black rounded-lg p-3 text-slate-900 dark:text-white focus:outline-none focus:border-cyan-600 text-sm"
                       />
                     </div>
 
                     <button
                       type="submit"
                       disabled={loginLoading}
-                      className="w-full bg-slate-900 hover:bg-slate-800 text-white py-3 rounded-lg text-xs font-semibold transition shadow-sm"
+                      className="w-full bg-slate-900 hover:bg-slate-800 dark:bg-white dark:hover:bg-neutral-200 text-white dark:text-black py-3 rounded-lg text-xs font-semibold transition shadow-sm"
                     >
                       {loginLoading ? "Entrando..." : "Entrar como Administrador"}
                     </button>
 
-                    <div className="text-[11px] text-slate-500 text-center pt-1">
-                      Credenciales: <span className="text-slate-800 font-semibold">admin@datelar.com</span> / <span className="text-slate-800 font-semibold">admin123</span>
+                    <div className="text-[11px] text-slate-500 dark:text-neutral-400 text-center pt-1">
+                      Credenciales: <span className="text-slate-800 dark:text-white font-semibold">admin@datelar.com</span> / <span className="text-slate-800 dark:text-white font-semibold">admin123</span>
                     </div>
                   </form>
                 )}
@@ -510,19 +530,19 @@ export default function DatelarAccessStandalonePortal() {
                 {/* FORMULARIO PORTERO / STAFF */}
                 {loginTab === "portero" && (
                   <form onSubmit={handlePorteroLogin} className="space-y-3.5 text-xs">
-                    <div className="p-3 bg-cyan-50 border border-cyan-100 rounded-lg text-xs text-cyan-800">
+                    <div className="p-3 bg-cyan-50 dark:bg-cyan-950/40 border border-cyan-200 dark:border-cyan-800 text-xs text-cyan-800 dark:text-cyan-300 rounded-lg">
                       Ingresa el código que te asignó el organizador para empezar a escanear entradas.
                     </div>
 
                     <div className="space-y-1">
-                      <label className="text-slate-700 font-semibold">Código del Evento</label>
+                      <label className="text-slate-700 dark:text-neutral-300 font-semibold">Código del Evento</label>
                       <input
                         type="text"
                         required
                         placeholder="Ej. UNL-2026"
                         value={porteroCodeInput}
                         onChange={(e) => setPorteroCodeInput(e.target.value)}
-                        className="w-full border border-cyan-400 bg-white rounded-lg p-3 text-slate-900 focus:outline-none focus:border-cyan-600 font-mono text-base uppercase font-bold tracking-widest text-center"
+                        className="w-full border border-cyan-400 bg-white dark:bg-black rounded-lg p-3 text-slate-900 dark:text-white focus:outline-none focus:border-cyan-600 font-mono text-base uppercase font-bold tracking-widest text-center"
                       />
                     </div>
 
@@ -537,7 +557,7 @@ export default function DatelarAccessStandalonePortal() {
                       <button
                         type="button"
                         onClick={() => setPorteroCodeInput("UNL-2026")}
-                        className="text-[11px] text-slate-500 hover:text-slate-800 underline"
+                        className="text-[11px] text-slate-500 dark:text-neutral-400 hover:text-slate-800 dark:hover:text-white underline"
                       >
                         Usar código de muestra (UNL-2026)
                       </button>
@@ -551,16 +571,16 @@ export default function DatelarAccessStandalonePortal() {
       ) : (
         /* PANEL PRIVADO OPERATIVO */
         <main className="max-w-7xl mx-auto px-4 sm:px-6 md:px-12 py-8 space-y-6">
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-200 pb-5">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-200 dark:border-neutral-800 pb-5">
             <div>
-              <span className="text-xs font-semibold text-cyan-600 uppercase tracking-wide">
+              <span className="text-xs font-semibold text-cyan-600 dark:text-cyan-400 uppercase tracking-wide">
                 {currentUser.role === "portero" ? "Modo Control de Puerta" : "Panel de Gestión"}
               </span>
-              <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 mt-0.5">
+              <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white mt-0.5">
                 {currentUser.role === "portero" ? `Validador: ${currentUser.event}` : "Administración de Eventos"}
               </h1>
-              <p className="text-xs text-slate-500 mt-0.5">
-                Sesión: <strong className="text-slate-800">{currentUser.name}</strong>
+              <p className="text-xs text-slate-500 dark:text-neutral-400 mt-0.5">
+                Sesión: <strong className="text-slate-800 dark:text-white">{currentUser.name}</strong>
               </p>
             </div>
 
@@ -570,8 +590,8 @@ export default function DatelarAccessStandalonePortal() {
                   onClick={() => setAdminTab("eventos")}
                   className={`px-3.5 py-2 rounded-lg transition shadow-sm ${
                     adminTab === "eventos"
-                      ? "bg-slate-900 text-white"
-                      : "bg-white border border-slate-200 text-slate-700 hover:bg-slate-50"
+                      ? "bg-slate-900 text-white dark:bg-white dark:text-black"
+                      : "bg-white dark:bg-neutral-900 border border-slate-200 dark:border-neutral-700 text-slate-700 dark:text-neutral-300 hover:bg-slate-50 dark:hover:bg-neutral-800"
                   }`}
                 >
                   Eventos ({events.length})
@@ -580,8 +600,8 @@ export default function DatelarAccessStandalonePortal() {
                   onClick={() => setAdminTab("emitir")}
                   className={`px-3.5 py-2 rounded-lg transition shadow-sm ${
                     adminTab === "emitir"
-                      ? "bg-slate-900 text-white"
-                      : "bg-white border border-slate-200 text-slate-700 hover:bg-slate-50"
+                      ? "bg-slate-900 text-white dark:bg-white dark:text-black"
+                      : "bg-white dark:bg-neutral-900 border border-slate-200 dark:border-neutral-700 text-slate-700 dark:text-neutral-300 hover:bg-slate-50 dark:hover:bg-neutral-800"
                   }`}
                 >
                   Emitir Entradas
@@ -591,7 +611,7 @@ export default function DatelarAccessStandalonePortal() {
                   className={`px-3.5 py-2 rounded-lg transition shadow-sm ${
                     adminTab === "staff_code"
                       ? "bg-cyan-600 text-white"
-                      : "bg-white border border-slate-200 text-slate-700 hover:bg-slate-50"
+                      : "bg-white dark:bg-neutral-900 border border-slate-200 dark:border-neutral-700 text-slate-700 dark:text-neutral-300 hover:bg-slate-50 dark:hover:bg-neutral-800"
                   }`}
                 >
                   Código Porteros
@@ -600,8 +620,8 @@ export default function DatelarAccessStandalonePortal() {
                   onClick={() => setAdminTab("validador")}
                   className={`px-3.5 py-2 rounded-lg transition shadow-sm ${
                     adminTab === "validador"
-                      ? "bg-slate-900 text-white"
-                      : "bg-white border border-slate-200 text-slate-700 hover:bg-slate-50"
+                      ? "bg-slate-900 text-white dark:bg-white dark:text-black"
+                      : "bg-white dark:bg-neutral-900 border border-slate-200 dark:border-neutral-700 text-slate-700 dark:text-neutral-300 hover:bg-slate-50 dark:hover:bg-neutral-800"
                   }`}
                 >
                   Validador
@@ -614,7 +634,7 @@ export default function DatelarAccessStandalonePortal() {
           {adminTab === "eventos" && currentUser.role !== "portero" && (
             <div className="space-y-4">
               <div className="flex items-center justify-between">
-                <h2 className="text-lg font-bold text-slate-900">Eventos Activos</h2>
+                <h2 className="text-lg font-bold text-slate-900 dark:text-white">Eventos Activos</h2>
                 <button
                   onClick={() => setIsNewEventOpen(true)}
                   className="bg-cyan-600 hover:bg-cyan-700 text-white px-4 py-2 rounded-lg text-xs font-semibold transition shadow-sm flex items-center gap-1.5"
@@ -635,8 +655,8 @@ export default function DatelarAccessStandalonePortal() {
                       onClick={() => setSelectedEventId(ev.id)}
                       className={`cursor-pointer border p-5 rounded-xl transition shadow-sm ${
                         isSelected
-                          ? "border-cyan-500 bg-cyan-50/40 ring-1 ring-cyan-400"
-                          : "border-slate-200 bg-white hover:border-slate-300"
+                          ? "border-cyan-500 bg-cyan-50/40 dark:bg-cyan-950/20 ring-1 ring-cyan-400"
+                          : "border-slate-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 hover:border-slate-300 dark:hover:border-neutral-700"
                       }`}
                     >
                       <div className="flex items-start justify-between">
@@ -644,8 +664,8 @@ export default function DatelarAccessStandalonePortal() {
                           <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full uppercase ${ev.statusColor}`}>
                             {ev.status}
                           </span>
-                          <h3 className="text-base font-bold text-slate-900 mt-1">{ev.name}</h3>
-                          <p className="text-xs text-slate-500 mt-0.5">{ev.location}</p>
+                          <h3 className="text-base font-bold text-slate-900 dark:text-white mt-1">{ev.name}</h3>
+                          <p className="text-xs text-slate-500 dark:text-neutral-400 mt-0.5">{ev.location}</p>
                         </div>
                         {isSelected && (
                           <span className="bg-cyan-600 text-white px-2 py-0.5 text-[9px] font-bold rounded">
@@ -654,17 +674,17 @@ export default function DatelarAccessStandalonePortal() {
                         )}
                       </div>
 
-                      <div className="mt-4 space-y-2 border-t border-slate-100 pt-3">
-                        <div className="flex justify-between text-slate-600">
+                      <div className="mt-4 space-y-2 border-t border-slate-100 dark:border-neutral-800 pt-3">
+                        <div className="flex justify-between text-slate-600 dark:text-neutral-400">
                           <span>Ingresados / Emitidos:</span>
-                          <strong className="text-slate-900">{ev.total_scanned} / {ev.total_issued} ({pct}%)</strong>
+                          <strong className="text-slate-900 dark:text-white">{ev.total_scanned} / {ev.total_issued} ({pct}%)</strong>
                         </div>
-                        <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+                        <div className="w-full bg-slate-100 dark:bg-neutral-800 h-2 rounded-full overflow-hidden">
                           <div className="bg-cyan-600 h-full rounded-full" style={{ width: `${Math.min(pct, 100)}%` }} />
                         </div>
-                        <div className="flex justify-between text-[11px] text-slate-500 pt-1">
+                        <div className="flex justify-between text-[11px] text-slate-500 dark:text-neutral-400 pt-1">
                           <span>Capacidad: {ev.capacity} personas</span>
-                          <span className="text-cyan-700 font-bold">Código Staff: {ev.staff_code}</span>
+                          <span className="text-cyan-700 dark:text-cyan-400 font-bold">Código Staff: {ev.staff_code}</span>
                         </div>
                       </div>
                     </div>
@@ -677,22 +697,22 @@ export default function DatelarAccessStandalonePortal() {
           {/* TAB 2: EMISIÓN DE ENTRADAS */}
           {adminTab === "emitir" && currentUser.role !== "portero" && (
             <div className="grid lg:grid-cols-12 gap-6">
-              <div className="lg:col-span-5 border border-slate-200 bg-white p-5 rounded-xl shadow-sm space-y-4">
+              <div className="lg:col-span-5 border border-slate-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 p-5 rounded-xl shadow-sm space-y-4">
                 <div>
-                  <span className="text-[10px] text-cyan-600 font-bold uppercase tracking-wide">Emisión de Boletos</span>
-                  <h3 className="text-lg font-bold text-slate-900 mt-0.5">Generar Pases con QR</h3>
-                  <p className="text-xs text-slate-500">
-                    Evento: <strong className="text-slate-800">{selectedEvent.name}</strong>
+                  <span className="text-[10px] text-cyan-600 dark:text-cyan-400 font-bold uppercase tracking-wide">Emisión de Boletos</span>
+                  <h3 className="text-lg font-bold text-slate-900 dark:text-white mt-0.5">Generar Pases con QR</h3>
+                  <p className="text-xs text-slate-500 dark:text-neutral-400">
+                    Evento: <strong className="text-slate-800 dark:text-white">{selectedEvent.name}</strong>
                   </p>
                 </div>
 
                 <form onSubmit={handleGenerateTickets} className="space-y-3 text-xs">
                   <div className="space-y-1">
-                    <label className="text-slate-700 font-semibold">Tipo de Pase</label>
+                    <label className="text-slate-700 dark:text-neutral-300 font-semibold">Tipo de Pase</label>
                     <select
                       value={ticketGenTier}
                       onChange={(e) => setTicketGenTier(e.target.value)}
-                      className="w-full border border-slate-300 rounded-lg p-2.5 text-slate-900 focus:outline-none focus:border-cyan-600 bg-white text-xs"
+                      className="w-full border border-slate-300 dark:border-neutral-700 bg-white dark:bg-black rounded-lg p-2.5 text-slate-900 dark:text-white focus:outline-none focus:border-cyan-600 text-xs"
                     >
                       {(selectedEvent.tiers || []).map((t: any) => (
                         <option key={t.name} value={t.name}>
@@ -703,32 +723,32 @@ export default function DatelarAccessStandalonePortal() {
                   </div>
 
                   <div className="space-y-1">
-                    <label className="text-slate-700 font-semibold">Cantidad</label>
+                    <label className="text-slate-700 dark:text-neutral-300 font-semibold">Cantidad</label>
                     <input
                       type="number"
                       min="1"
                       max="50"
                       value={ticketGenQty}
                       onChange={(e) => setTicketGenQty(Number(e.target.value))}
-                      className="w-full border border-slate-300 rounded-lg p-2.5 text-slate-900 focus:outline-none focus:border-cyan-600 text-xs"
+                      className="w-full border border-slate-300 dark:border-neutral-700 bg-white dark:bg-black rounded-lg p-2.5 text-slate-900 dark:text-white focus:outline-none focus:border-cyan-600 text-xs"
                     />
                   </div>
 
                   <div className="space-y-1">
-                    <label className="text-slate-700 font-semibold">Nombre Asistente (Opcional)</label>
+                    <label className="text-slate-700 dark:text-neutral-300 font-semibold">Nombre Asistente (Opcional)</label>
                     <input
                       type="text"
                       placeholder="Ej. Juan Pérez"
                       value={ticketGenName}
                       onChange={(e) => setTicketGenName(e.target.value)}
-                      className="w-full border border-slate-300 rounded-lg p-2.5 text-slate-900 focus:outline-none focus:border-cyan-600 text-xs"
+                      className="w-full border border-slate-300 dark:border-neutral-700 bg-white dark:bg-black rounded-lg p-2.5 text-slate-900 dark:text-white focus:outline-none focus:border-cyan-600 text-xs"
                     />
                   </div>
 
                   <button
                     type="submit"
                     disabled={isGenerating}
-                    className="w-full bg-slate-900 hover:bg-slate-800 text-white py-3 rounded-lg text-xs font-semibold transition shadow-sm"
+                    className="w-full bg-slate-900 hover:bg-slate-800 dark:bg-white dark:hover:bg-neutral-200 text-white dark:text-black py-3 rounded-lg text-xs font-semibold transition shadow-sm"
                   >
                     {isGenerating ? "Emitiendo..." : "Generar Entradas Digitales"}
                   </button>
@@ -737,13 +757,13 @@ export default function DatelarAccessStandalonePortal() {
 
               <div className="lg:col-span-7 space-y-3">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-bold text-slate-800 uppercase">
+                  <span className="text-xs font-bold text-slate-800 dark:text-white uppercase">
                     Entradas Emitidas ({generatedTickets.length})
                   </span>
                   {generatedTickets.length > 0 && (
                     <button
                       onClick={() => setGeneratedTickets([])}
-                      className="text-xs text-slate-500 hover:text-slate-900"
+                      className="text-xs text-slate-500 dark:text-neutral-400 hover:text-slate-900 dark:hover:text-white"
                     >
                       Limpiar lista
                     </button>
@@ -751,24 +771,24 @@ export default function DatelarAccessStandalonePortal() {
                 </div>
 
                 {generatedTickets.length === 0 ? (
-                  <div className="border border-slate-200 bg-white p-8 rounded-xl text-center text-slate-400 text-xs shadow-sm">
+                  <div className="border border-slate-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 p-8 rounded-xl text-center text-slate-400 dark:text-neutral-500 text-xs shadow-sm">
                     No has emitido entradas en esta sesión. Completa el formulario de la izquierda.
                   </div>
                 ) : (
                   <div className="grid sm:grid-cols-2 gap-3 max-h-[460px] overflow-y-auto pr-1">
                     {generatedTickets.map((t) => (
-                      <div key={t.code_hash} className="border border-slate-200 bg-white p-4 rounded-xl shadow-sm space-y-2 text-xs">
+                      <div key={t.code_hash} className="border border-slate-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 p-4 rounded-xl shadow-sm space-y-2 text-xs">
                         <div className="flex justify-between items-center">
-                          <span className="text-cyan-700 font-bold">{t.tier}</span>
-                          <span className="text-slate-400 font-mono">#{t.ticket_number}</span>
+                          <span className="text-cyan-700 dark:text-cyan-400 font-bold">{t.tier}</span>
+                          <span className="text-slate-400 dark:text-neutral-500 font-mono">#{t.ticket_number}</span>
                         </div>
-                        <div className="p-3 bg-slate-50 border border-slate-200 rounded-lg flex items-center justify-center">
-                          <QrCode className="h-20 w-20 text-slate-900" />
+                        <div className="p-3 bg-slate-50 dark:bg-black border border-slate-200 dark:border-neutral-800 rounded-lg flex items-center justify-center">
+                          <QrCode className="h-20 w-20 text-slate-900 dark:text-white" />
                         </div>
-                        <div className="text-xs text-slate-900 truncate font-semibold">
+                        <div className="text-xs text-slate-900 dark:text-white truncate font-semibold">
                           {t.attendee_name}
                         </div>
-                        <div className="text-[10px] text-slate-400 truncate font-mono">
+                        <div className="text-[10px] text-slate-400 dark:text-neutral-500 truncate font-mono">
                           {t.code_hash}
                         </div>
                         <button
@@ -776,7 +796,7 @@ export default function DatelarAccessStandalonePortal() {
                             setAdminTab("validador");
                             handleValidateCode(t.code_hash);
                           }}
-                          className="w-full border border-slate-300 py-1.5 rounded-lg text-[11px] text-slate-700 hover:bg-slate-100 font-semibold transition"
+                          className="w-full border border-slate-300 dark:border-neutral-700 py-1.5 rounded-lg text-[11px] text-slate-700 dark:text-neutral-300 hover:bg-slate-100 dark:hover:bg-neutral-900 font-semibold transition"
                         >
                           Probar en Validador
                         </button>
@@ -790,25 +810,25 @@ export default function DatelarAccessStandalonePortal() {
 
           {/* TAB 3: CÓDIGO ÚNICO PARA PORTEROS (STAFF) */}
           {adminTab === "staff_code" && currentUser.role !== "portero" && (
-            <div className="border border-slate-200 bg-white p-6 sm:p-8 rounded-2xl shadow-sm space-y-6 max-w-2xl">
+            <div className="border border-slate-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 p-6 sm:p-8 rounded-2xl shadow-sm space-y-6 max-w-2xl">
               <div>
-                <span className="text-xs font-semibold text-cyan-600 uppercase tracking-wide">
+                <span className="text-xs font-semibold text-cyan-600 dark:text-cyan-400 uppercase tracking-wide">
                   Acceso para Personal de Puerta
                 </span>
-                <h2 className="text-xl sm:text-2xl font-bold text-slate-900 mt-1">
+                <h2 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white mt-1">
                   Código de Acceso Rápido para Porteros
                 </h2>
-                <p className="text-xs sm:text-sm text-slate-600 mt-1 leading-relaxed">
+                <p className="text-xs sm:text-sm text-slate-600 dark:text-neutral-400 mt-1 leading-relaxed">
                   Para que tu personal de seguridad y puerta no necesite crear cuentas ni recordar contraseñas, entrégales este código. Con solo ingresarlo en la pantalla inicial, entrarán directo a escanear entradas para <strong>{selectedEvent.name}</strong>.
                 </p>
               </div>
 
               {/* Tarjeta del Código */}
-              <div className="border-2 border-dashed border-cyan-400 bg-cyan-50/50 p-6 rounded-xl text-center space-y-3">
-                <span className="text-xs text-slate-500 uppercase tracking-wide font-medium">
+              <div className="border-2 border-dashed border-cyan-400 dark:border-cyan-500 bg-cyan-50/50 dark:bg-cyan-950/20 p-6 rounded-xl text-center space-y-3">
+                <span className="text-xs text-slate-500 dark:text-neutral-400 uppercase tracking-wide font-medium">
                   Código activo para este evento
                 </span>
-                <div className="text-3xl sm:text-4xl font-mono font-bold text-slate-900 tracking-wider">
+                <div className="text-3xl sm:text-4xl font-mono font-bold text-slate-900 dark:text-white tracking-wider">
                   {selectedEvent.staff_code || staffAccessCode}
                 </div>
                 <div>
@@ -831,25 +851,25 @@ export default function DatelarAccessStandalonePortal() {
           {(adminTab === "validador" || currentUser.role === "portero") && (
             <div className="max-w-xl mx-auto space-y-4 text-center">
               <div className="space-y-0.5">
-                <span className="text-xs font-semibold text-cyan-600 uppercase tracking-wide">
+                <span className="text-xs font-semibold text-cyan-600 dark:text-cyan-400 uppercase tracking-wide">
                   Modo de Validación en Puerta
                 </span>
-                <h2 className="text-xl sm:text-2xl font-bold text-slate-900">
+                <h2 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">
                   Escaneo y Control de Acceso
                 </h2>
-                <p className="text-xs text-slate-500">
-                  Evento: <strong className="text-slate-800">{selectedEvent.name}</strong>
+                <p className="text-xs text-slate-500 dark:text-neutral-400">
+                  Evento: <strong className="text-slate-800 dark:text-white">{selectedEvent.name}</strong>
                 </p>
               </div>
 
-              <div className="border border-slate-200 bg-white p-6 rounded-2xl shadow-sm min-h-[170px] flex flex-col items-center justify-center">
+              <div className="border border-slate-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 p-6 rounded-2xl shadow-sm min-h-[170px] flex flex-col items-center justify-center">
                 {scanResult.status === "valid" && (
                   <div className="space-y-1.5 text-center">
-                    <CheckCircle2 className="h-12 w-12 text-emerald-600 mx-auto" />
-                    <h3 className="text-xl font-bold text-emerald-700">
+                    <CheckCircle2 className="h-12 w-12 text-emerald-600 dark:text-emerald-400 mx-auto" />
+                    <h3 className="text-xl font-bold text-emerald-700 dark:text-emerald-400">
                       {scanResult.message}
                     </h3>
-                    <div className="text-xs text-slate-600">
+                    <div className="text-xs text-slate-600 dark:text-neutral-400">
                       {scanResult.details?.attendee} &middot; {scanResult.details?.time}
                     </div>
                   </div>
@@ -857,11 +877,11 @@ export default function DatelarAccessStandalonePortal() {
 
                 {scanResult.status === "duplicate" && (
                   <div className="space-y-1.5 text-center">
-                    <XCircle className="h-12 w-12 text-rose-600 mx-auto" />
-                    <h3 className="text-xl font-bold text-rose-700">
+                    <XCircle className="h-12 w-12 text-rose-600 dark:text-rose-400 mx-auto" />
+                    <h3 className="text-xl font-bold text-rose-700 dark:text-rose-400">
                       {scanResult.message}
                     </h3>
-                    <div className="text-xs text-slate-600">
+                    <div className="text-xs text-slate-600 dark:text-neutral-400">
                       {scanResult.details?.time}
                     </div>
                   </div>
@@ -870,14 +890,14 @@ export default function DatelarAccessStandalonePortal() {
                 {scanResult.status === "invalid" && (
                   <div className="space-y-1.5 text-center">
                     <AlertTriangle className="h-12 w-12 text-amber-500 mx-auto" />
-                    <h3 className="text-xl font-bold text-amber-700">
+                    <h3 className="text-xl font-bold text-amber-700 dark:text-amber-400">
                       {scanResult.message}
                     </h3>
                   </div>
                 )}
 
                 {scanResult.status === null && (
-                  <div className="text-slate-400 text-xs">
+                  <div className="text-slate-400 dark:text-neutral-500 text-xs">
                     Listo para escanear &middot; Ingresa o pega un código para probar
                   </div>
                 )}
@@ -890,27 +910,27 @@ export default function DatelarAccessStandalonePortal() {
                   value={manualCode}
                   onChange={(e) => setManualCode(e.target.value)}
                   onKeyDown={(e) => e.key === "Enter" && handleValidateCode(manualCode)}
-                  className="flex-1 border border-slate-300 rounded-lg px-4 py-2.5 text-sm text-slate-900 focus:outline-none focus:border-cyan-600 bg-white font-mono"
+                  className="flex-1 border border-slate-300 dark:border-neutral-700 rounded-lg px-4 py-2.5 text-sm text-slate-900 dark:text-white focus:outline-none focus:border-cyan-600 bg-white dark:bg-black font-mono"
                 />
                 <button
                   onClick={() => handleValidateCode(manualCode)}
-                  className="bg-slate-900 hover:bg-slate-800 text-white px-5 py-2.5 rounded-lg text-xs font-semibold transition shadow-sm"
+                  className="bg-slate-900 hover:bg-slate-800 dark:bg-white dark:hover:bg-neutral-200 text-white dark:text-black px-5 py-2.5 rounded-lg text-xs font-semibold transition shadow-sm"
                 >
                   Validar
                 </button>
               </div>
 
-              <div className="flex justify-center gap-3 text-xs text-slate-500 pt-1">
+              <div className="flex justify-center gap-3 text-xs text-slate-500 dark:text-neutral-400 pt-1">
                 <button
                   onClick={() => handleValidateCode(`DTL-${selectedEvent.name.slice(0, 3).toUpperCase()}-1001-TEST`)}
-                  className="hover:text-cyan-700 transition underline"
+                  className="hover:text-cyan-700 dark:hover:text-cyan-400 transition underline"
                 >
                   Probar Entrada Válida
                 </button>
                 <span>&middot;</span>
                 <button
                   onClick={() => handleValidateCode("DUPLICATE-SAMPLE")}
-                  className="hover:text-rose-700 transition underline"
+                  className="hover:text-rose-700 dark:hover:text-rose-400 transition underline"
                 >
                   Probar Entrada Duplicada
                 </button>
@@ -922,58 +942,58 @@ export default function DatelarAccessStandalonePortal() {
 
       {/* MODAL CREAR NUEVO EVENTO */}
       {isNewEventOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-sm p-4">
-          <div className="w-full max-w-md border border-slate-200 bg-white rounded-2xl shadow-2xl p-6 sm:p-8 space-y-5 relative">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+          <div className="w-full max-w-md border border-slate-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 rounded-2xl shadow-2xl p-6 sm:p-8 space-y-5 relative">
             <button
               onClick={() => setIsNewEventOpen(false)}
-              className="absolute top-4 right-4 text-slate-400 hover:text-slate-700"
+              className="absolute top-4 right-4 text-slate-400 hover:text-slate-700 dark:hover:text-white"
             >
               <X className="h-5 w-5" />
             </button>
 
             <div>
-              <span className="text-[10px] text-cyan-600 font-bold uppercase tracking-wide">
+              <span className="text-[10px] text-cyan-600 dark:text-cyan-400 font-bold uppercase tracking-wide">
                 Administración
               </span>
-              <h3 className="text-xl sm:text-2xl font-bold text-slate-900 mt-0.5">Crear Nuevo Evento</h3>
-              <p className="text-xs text-slate-500">
+              <h3 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white mt-0.5">Crear Nuevo Evento</h3>
+              <p className="text-xs text-slate-500 dark:text-neutral-400">
                 Registra un nuevo concierto, festival o congreso en el sistema.
               </p>
             </div>
 
             <form onSubmit={handleCreateNewEvent} className="space-y-3.5 text-xs">
               <div className="space-y-1">
-                <label className="text-slate-700 font-semibold">Nombre del Evento *</label>
+                <label className="text-slate-700 dark:text-neutral-300 font-semibold">Nombre del Evento *</label>
                 <input
                   type="text"
                   required
                   placeholder="Ej. Festival Loja 2026"
                   value={newEventName}
                   onChange={(e) => setNewEventName(e.target.value)}
-                  className="w-full border border-slate-300 rounded-lg p-3 text-slate-900 focus:outline-none focus:border-cyan-600 text-sm"
+                  className="w-full border border-slate-300 dark:border-neutral-700 bg-white dark:bg-black rounded-lg p-3 text-slate-900 dark:text-white focus:outline-none focus:border-cyan-600 text-sm"
                 />
               </div>
 
               <div className="space-y-1">
-                <label className="text-slate-700 font-semibold">Ubicación / Recinto</label>
+                <label className="text-slate-700 dark:text-neutral-300 font-semibold">Ubicación / Recinto</label>
                 <input
                   type="text"
                   placeholder="Ej. Teatro Benjamín Carrión"
                   value={newEventLocation}
                   onChange={(e) => setNewEventLocation(e.target.value)}
-                  className="w-full border border-slate-300 rounded-lg p-3 text-slate-900 focus:outline-none focus:border-cyan-600 text-sm"
+                  className="w-full border border-slate-300 dark:border-neutral-700 bg-white dark:bg-black rounded-lg p-3 text-slate-900 dark:text-white focus:outline-none focus:border-cyan-600 text-sm"
                 />
               </div>
 
               <div className="space-y-1">
-                <label className="text-slate-700 font-semibold">Aforo Máximo (Personas)</label>
+                <label className="text-slate-700 dark:text-neutral-300 font-semibold">Aforo Máximo (Personas)</label>
                 <input
                   type="number"
                   min="10"
                   max="100000"
                   value={newEventCapacity}
                   onChange={(e) => setNewEventCapacity(Number(e.target.value))}
-                  className="w-full border border-slate-300 rounded-lg p-3 text-slate-900 focus:outline-none focus:border-cyan-600 text-sm"
+                  className="w-full border border-slate-300 dark:border-neutral-700 bg-white dark:bg-black rounded-lg p-3 text-slate-900 dark:text-white focus:outline-none focus:border-cyan-600 text-sm"
                 />
               </div>
 

@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   description:
     "Plataforma para control de accesos en eventos y emisión de entradas digitales. Producto de Datelar Labs.",
   icons: {
-    icon: "/brand/datelar-access/datelar-access-icon-dark.svg",
+    icon: "/brand/datelar-access/datelar-access-icon-white.svg",
   },
 };
 
@@ -16,11 +16,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="es">
+    <html lang="es" className="dark">
       <head>
-        <link rel="icon" href="/brand/datelar-access/datelar-access-icon-dark.svg" type="image/svg+xml" />
+        <link rel="icon" href="/brand/datelar-access/datelar-access-icon-white.svg" type="image/svg+xml" />
       </head>
-      <body className="min-h-screen bg-slate-50 text-slate-900 antialiased selection:bg-cyan-600 selection:text-white font-sans">
+      <body className="min-h-screen antialiased selection:bg-cyan-600 selection:text-white font-sans transition-colors duration-200">
         {children}
       </body>
     </html>
