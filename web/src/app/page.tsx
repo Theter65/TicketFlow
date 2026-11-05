@@ -421,8 +421,8 @@ export default function DatelarAccessPage() {
 
           <div className="flex items-center gap-3 font-mono text-[10px]">
             <span className="hidden sm:inline-flex items-center gap-1.5 border border-white/20 px-2.5 py-1 text-neutral-300">
-              <Server className="h-3 w-3 text-white" />
-              <span>POSTGRES: PI 5 / SUPABASE</span>
+              <ShieldCheck className="h-3 w-3 text-white" />
+              <span>SISTEMA SEGURO // EN LÍNEA</span>
             </span>
 
             {currentUser ? (
@@ -456,42 +456,42 @@ export default function DatelarAccessPage() {
       <section className="px-6 md:px-12 py-16 md:py-20 border-b border-white/10">
         <div className="max-w-4xl space-y-4">
           <span className="text-[11px] font-mono tracking-[0.25em] text-neutral-400 uppercase">
-            SISTEMA DE CONTROL DE ACCESO &middot; WEB + FLUTTER
+            CONTROL DE ACCESOS &middot; PLATAFORMA WEB & APP MÓVIL
           </span>
           <h1 className="text-3xl md:text-5xl lg:text-6xl font-medium tracking-tight">
-            Gestión de eventos, emisión de entradas y validación ultrarrápida en puertas.
+            Ingreso rápido sin filas, entradas infalsificables y control total de tu evento.
           </h1>
           <p className="text-base text-neutral-400 font-light leading-relaxed max-w-2xl">
-            Diseñado para conciertos, eventos corporativos, discotecas y recintos deportivos. 
-            Emite códigos QR criptográficos anti-duplicación y valida entradas en menos de 200 ms 
-            desde la plataforma web o la app nativa en <strong>iPhone y Android</strong>.
+            Diseñado para conciertos, congresos, festivales, discotecas y recintos deportivos. 
+            Emite boletos digitales únicos y verifica el acceso de los asistentes al instante 
+            desde la plataforma web o directamente desde cualquier teléfono inteligente.
           </p>
         </div>
 
         {/* Quick Metrics Bar */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6 pt-12">
           <div className="border border-white/10 bg-neutral-950 p-4">
-            <div className="text-[10px] font-mono tracking-widest text-neutral-500 uppercase">LATENCIA EN PUERTA</div>
-            <div className="text-2xl font-normal text-white mt-1">&lt; 180 ms</div>
-            <div className="text-xs text-neutral-400 mt-0.5">Validación atómica SQL</div>
+            <div className="text-[10px] font-mono tracking-widest text-neutral-500 uppercase">ACCESO INMEDIATO</div>
+            <div className="text-2xl font-normal text-white mt-1">&lt; 1 SEGUNDO</div>
+            <div className="text-xs text-neutral-400 mt-0.5">Ingreso fluido sin demoras</div>
           </div>
 
           <div className="border border-white/10 bg-neutral-950 p-4">
-            <div className="text-[10px] font-mono tracking-widest text-neutral-500 uppercase">SEGURIDAD QR</div>
-            <div className="text-2xl font-normal text-white mt-1">ANTI-COPIA</div>
-            <div className="text-xs text-neutral-400 mt-0.5">Tokens firmados con hash</div>
+            <div className="text-[10px] font-mono tracking-widest text-neutral-500 uppercase">SEGURIDAD TOTAL</div>
+            <div className="text-2xl font-normal text-white mt-1">CERO FRAUDES</div>
+            <div className="text-xs text-neutral-400 mt-0.5">Bloquea duplicados y reventas</div>
           </div>
 
           <div className="border border-white/10 bg-neutral-950 p-4">
-            <div className="text-[10px] font-mono tracking-widest text-neutral-500 uppercase">COMPATIBILIDAD</div>
-            <div className="text-2xl font-normal text-white mt-1">iOS + ANDROID</div>
-            <div className="text-xs text-neutral-400 mt-0.5">App nativa en Flutter</div>
+            <div className="text-[10px] font-mono tracking-widest text-neutral-500 uppercase">FÁCIL DE USAR</div>
+            <div className="text-2xl font-normal text-white mt-1">iOS & ANDROID</div>
+            <div className="text-xs text-neutral-400 mt-0.5">Escaneo desde cualquier celular</div>
           </div>
 
           <div className="border border-white/10 bg-neutral-950 p-4">
-            <div className="text-[10px] font-mono tracking-widest text-neutral-500 uppercase">MODO RESILIENTE</div>
-            <div className="text-2xl font-normal text-white mt-1">OFFLINE READY</div>
-            <div className="text-xs text-neutral-400 mt-0.5">Soporte en zonas sin red</div>
+            <div className="text-[10px] font-mono tracking-widest text-neutral-500 uppercase">DISPONIBILIDAD</div>
+            <div className="text-2xl font-normal text-white mt-1">SIN INTERNET</div>
+            <div className="text-xs text-neutral-400 mt-0.5">Funciona en cualquier recinto</div>
           </div>
         </div>
       </section>
@@ -730,7 +730,7 @@ export default function DatelarAccessPage() {
               VALIDADOR EN PUERTA
             </h2>
             <p className="text-xs text-neutral-400 mt-1">
-              Validación atómica en tiempo real en PostgreSQL con bloqueo FOR UPDATE
+              Comprobación de entradas en tiempo real: verifica al instante la validez del boleto y alerta ante intentos de reingreso o duplicados.
             </p>
           </div>
 
@@ -813,7 +813,7 @@ export default function DatelarAccessPage() {
         </div>
       </section>
 
-      {/* 6. Flutter Mobile App Overview */}
+      {/* 6. Mobile App Overview */}
       <section id="mobile" className="px-6 md:px-12 py-16">
         <div className="border border-white/15 bg-neutral-950 p-8 md:p-12">
           <div className="grid gap-8 lg:grid-cols-12 lg:items-center">
@@ -822,37 +822,42 @@ export default function DatelarAccessPage() {
                 04 &middot; APLICACIÓN MÓVIL
               </span>
               <h2 className="text-2xl md:text-4xl font-medium tracking-tight">
-                APP DATELAR ACCESS EN FLUTTER (iOS & ANDROID)
+                CONTROL EN PUERTA DESDE TU TELÉFONO (iOS & ANDROID)
               </h2>
               <p className="text-sm text-neutral-400 font-light leading-relaxed">
-                Diseñada específicamente para el personal de puerta y organizadores de eventos: 
-                lector de cámara a 60 fps, vibración háptica al validar, generación de pases de cortesía 
-                en el momento y funcionamiento autónomo sin conexión a internet.
+                Diseñada para que el personal de ingreso opere a máxima velocidad: lectura rápida de códigos QR incluso en la oscuridad, confirmación por vibración para agilizar el paso sin desviar la mirada de la puerta, y funcionamiento garantizado sin importar si se cae la señal en el recinto.
               </p>
 
               <div className="grid grid-cols-2 gap-4 pt-2 font-mono text-xs text-neutral-400">
-                <div>&bull; iPhone (iOS 14+)</div>
-                <div>&bull; Android (API 21+)</div>
-                <div>&bull; Escaneo con flash en penumbra</div>
-                <div>&bull; Sincronización automática</div>
+                <div>&bull; Compatible con iPhone y Android</div>
+                <div>&bull; Linterna integrada para eventos nocturnos</div>
+                <div>&bull; Aviso por vibración al autorizar</div>
+                <div>&bull; Emisión de pases de última hora</div>
               </div>
             </div>
 
             <div className="lg:col-span-5 flex justify-center">
-              <div className="border border-white/20 p-6 bg-black font-mono text-xs text-neutral-400 space-y-3 w-full max-w-sm">
+              <div className="border border-white/20 p-6 bg-black font-mono text-xs text-neutral-400 space-y-4 w-full max-w-sm">
                 <div className="flex justify-between items-center border-b border-white/10 pb-2">
-                  <span className="text-white font-semibold">FLUTTER CORE</span>
-                  <span className="text-neutral-500">v3.x / DART</span>
+                  <span className="text-white font-semibold">VENTAJAS OPERATIVAS</span>
+                  <span className="text-emerald-400">ACTIVO</span>
                 </div>
-                <div className="text-[11px] text-neutral-300">
-                  📁 mobile/lib/
-                  <div className="pl-3 text-[10px] text-neutral-500 space-y-1 mt-1">
-                    <div>├── main.dart</div>
-                    <div>├── screens/login_screen.dart</div>
-                    <div>├── screens/scanner_screen.dart</div>
-                    <div>├── screens/events_screen.dart</div>
-                    <div>├── screens/generate_screen.dart</div>
-                    <div>└── services/api_service.dart</div>
+                <div className="space-y-2.5 text-xs">
+                  <div className="flex items-center gap-2 text-neutral-300">
+                    <CheckCircle2 className="h-4 w-4 text-emerald-400 shrink-0" />
+                    <span>Sin comprar escáneres costosos</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-neutral-300">
+                    <CheckCircle2 className="h-4 w-4 text-emerald-400 shrink-0" />
+                    <span>Cualquier smartphone sirve como lector</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-neutral-300">
+                    <CheckCircle2 className="h-4 w-4 text-emerald-400 shrink-0" />
+                    <span>Reporte de aforo sincronizado al instante</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-neutral-300">
+                    <CheckCircle2 className="h-4 w-4 text-emerald-400 shrink-0" />
+                    <span>Protección total contra boletos falsos</span>
                   </div>
                 </div>
               </div>
