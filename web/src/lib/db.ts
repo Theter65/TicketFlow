@@ -13,8 +13,8 @@ export function getDbPool(): Pool {
       connectionString,
       ssl: process.env.DATABASE_SSL === "true" ? { rejectUnauthorized: false } : false,
       max: 10,
-      idleTimeoutMillis: 30000,
-      connectionTimeoutMillis: 5000,
+      idleTimeoutMillis: 10000,
+      connectionTimeoutMillis: 2000,
     });
   }
   return pool;
