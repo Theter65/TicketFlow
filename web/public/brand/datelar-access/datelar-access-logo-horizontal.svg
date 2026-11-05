@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 200" width="800" height="200" fill="none">
+  <!-- Symbol -->
+  <g transform="translate(40, 20) scale(6.66)" stroke="#FFFFFF" stroke-width="1.5" stroke-linecap="square" stroke-linejoin="miter">
+    <rect x="3" y="3" width="7" height="7" />
+    <rect x="14" y="3" width="7" height="7" />
+    <rect x="3" y="14" width="7" height="7" />
+    <rect x="6" y="6" width="1" height="1" fill="#FFFFFF" stroke="none" />
+    <rect x="17" y="6" width="1" height="1" fill="#FFFFFF" stroke="none" />
+    <rect x="6" y="17" width="1" height="1" fill="#FFFFFF" stroke="none" />
+    <path d="M14 14h3v3h-3zM17 17h4v4h-4zM14 20h3v1h-3z" fill="#FFFFFF" stroke="none" />
+  </g>
+
+  <!-- Typography -->
+  <text x="240" y="98" fill="#FFFFFF" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="44" font-weight="600" letter-spacing="8">DATELAR</text>
+  <text x="242" y="146" fill="#A3A3A3" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="28" font-weight="400" letter-spacing="12">ACCESS</text>
+</svg>

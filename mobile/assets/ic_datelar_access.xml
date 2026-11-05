@@ -1,0 +1,21 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+  <!-- Outer Corner Frames -->
+  <path
+      android:strokeColor="#FFFFFFFF"
+      android:strokeWidth="1.5"
+      android:strokeLineCap="square"
+      android:strokeLineJoin="miter"
+      android:pathData="M3,3h7v7h-7z M14,3h7v7h-7z M3,14h7v7h-7z" />
+  <!-- Inner Target Dots -->
+  <path
+      android:fillColor="#FFFFFFFF"
+      android:pathData="M6,6h1v1h-1z M17,6h1v1h-1z M6,17h1v1h-1z" />
+  <!-- Access Verification Data Matrix -->
+  <path
+      android:fillColor="#FFFFFFFF"
+      android:pathData="M14,14h3v3h-3z M17,17h4v4h-4z M14,20h3v1h-3z" />
+</vector>
