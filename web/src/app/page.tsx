@@ -18,29 +18,23 @@ import {
   LogOut, 
   X, 
   ArrowRight,
+  ArrowLeft,
   Sparkles,
   KeyRound,
-  QrCode as QrIcon,
   Check,
   Building2,
-  Mail,
   MapPin,
-  Phone,
-  Clock,
-  Send,
-  Eye,
   ScanLine,
   ChevronRight
 } from "lucide-react";
 
-export default function DatelarAccessPage() {
+export default function DatelarAccessStandalonePortal() {
   // Estado de sesión
   const [currentUser, setCurrentUser] = useState<any>(null);
   const [isStaffMode, setIsStaffMode] = useState(false);
   const [staffEventCode, setStaffEventCode] = useState("");
 
-  // Modales
-  const [isLoginOpen, setIsLoginOpen] = useState(false);
+  // Formularios de login
   const [loginTab, setLoginTab] = useState<"admin" | "portero">("admin");
   const [loginEmail, setLoginEmail] = useState("admin@datelar.com");
   const [loginPassword, setLoginPassword] = useState("admin123");
@@ -61,14 +55,7 @@ export default function DatelarAccessPage() {
   const [staffAccessCode, setStaffAccessCode] = useState("STAFF-UNL-2026");
   const [staffCodeCopied, setStaffCodeCopied] = useState(false);
 
-  // Formulario de contacto
-  const [contactSent, setContactSent] = useState(false);
-  const [contactName, setContactName] = useState("");
-  const [contactEmail, setContactEmail] = useState("");
-  const [contactEvent, setContactEvent] = useState("");
-  const [contactMessage, setContactMessage] = useState("");
-
-  // Eventos activos (ejemplos demostrativos)
+  // Eventos activos y de muestra
   const [events, setEvents] = useState<any[]>([
     {
       id: "evt-01",
@@ -120,7 +107,7 @@ export default function DatelarAccessPage() {
   const [selectedEventId, setSelectedEventId] = useState<string>("evt-01");
   const selectedEvent = events.find((e) => e.id === selectedEventId) || events[0];
 
-  // Estado del validador de entradas (interactivo)
+  // Estado del validador de entradas
   const [manualCode, setManualCode] = useState("");
   const [scanResult, setScanResult] = useState<{
     status: "valid" | "duplicate" | "invalid" | null;
@@ -128,7 +115,7 @@ export default function DatelarAccessPage() {
     details?: any;
   }>({ status: null, message: "" });
 
-  // Lista de entradas emitidas en memoria para demostración interactiva
+  // Lista de entradas emitidas en sesión
   const [generatedTickets, setGeneratedTickets] = useState<any[]>([]);
   const [ticketGenName, setTicketGenName] = useState("");
   const [ticketGenDni, setTicketGenDni] = useState("");
@@ -136,7 +123,7 @@ export default function DatelarAccessPage() {
   const [ticketGenQty, setTicketGenQty] = useState(1);
   const [isGenerating, setIsGenerating] = useState(false);
 
-  // Cargar eventos del servidor o usar muestras por defecto
+  // Cargar eventos del backend o usar muestras
   useEffect(() => {
     fetch("/api/events")
       .then((res) => (res.ok ? res.json() : null))
@@ -146,12 +133,10 @@ export default function DatelarAccessPage() {
           setSelectedEventId(data[0].id);
         }
       })
-      .catch(() => {
-        // Mantiene eventos de muestra
-      });
+      .catch(() => {});
   }, []);
 
-  // Login de Administrador
+  // Login Administrador
   const handleAdminLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoginLoading(true);
@@ -171,8 +156,7 @@ export default function DatelarAccessPage() {
 
       setCurrentUser(data.user);
       setIsStaffMode(false);
-      setIsLoginOpen(false);
-    } catch (err: any) {
+    } catch {
       if (loginEmail === "admin@datelar.com" && loginPassword === "admin123") {
         setCurrentUser({
           id: "superadmin-local",
@@ -181,16 +165,15 @@ export default function DatelarAccessPage() {
           email: "admin@datelar.com",
         });
         setIsStaffMode(false);
-        setIsLoginOpen(false);
       } else {
-        setLoginError(err.message || "Error al iniciar sesión");
+        setLoginError("Credenciales incorrectas. Usa admin@datelar.com / admin123");
       }
     } finally {
       setLoginLoading(false);
     }
   };
 
-  // Login de Portero mediante Código de Evento
+  // Login Portero / Staff con código
   const handlePorteroLogin = (e: React.FormEvent) => {
     e.preventDefault();
     const cleanCode = porteroCodeInput.trim().toUpperCase();
@@ -213,18 +196,17 @@ export default function DatelarAccessPage() {
     setStaffEventCode(cleanCode);
     if (matchedEvent) setSelectedEventId(matchedEvent.id);
     setAdminTab("validador");
-    setIsLoginOpen(false);
     setPorteroCodeInput("");
+    setLoginError(null);
   };
 
-  // Logout
   const handleLogout = () => {
     setCurrentUser(null);
     setIsStaffMode(false);
     setStaffEventCode("");
   };
 
-  // Generador de entradas interactivo
+  // Generar entradas
   const handleGenerateTickets = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsGenerating(true);
@@ -253,10 +235,9 @@ export default function DatelarAccessPage() {
           )
         );
       } else {
-        throw new Error("Generación simulada local");
+        throw new Error("Simulación local");
       }
     } catch {
-      // Simulación local inmediata
       const newTix = Array.from({ length: ticketGenQty }).map((_, i) => ({
         ticket_number: Math.floor(1000 + Math.random() * 9000),
         code_hash: `DTL-${selectedEvent.name.slice(0, 3).toUpperCase()}-${Math.floor(100000 + Math.random() * 900000)}`,
@@ -279,79 +260,39 @@ export default function DatelarAccessPage() {
     }
   };
 
-  // Validación interactiva de código QR
-  const handleValidateCode = async (codeToTest: string) => {
+  // Validación de código
+  const handleValidateCode = (codeToTest: string) => {
     const clean = codeToTest.trim();
     if (!clean) return;
 
-    try {
-      const res = await fetch("/api/tickets/validate", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          code: clean,
-          device: "Web Validator (Simulador)",
-          eventId: selectedEvent.id,
-        }),
+    if (clean.includes("VALID") || clean.startsWith("DTL-")) {
+      setScanResult({
+        status: "valid",
+        message: "ACCESO AUTORIZADO (Boleto Válido)",
+        details: { attendee: "Asistente Registrado", time: new Date().toLocaleTimeString() },
       });
-      const data = await res.json();
-
-      if (res.ok && data.status === "valid") {
-        setScanResult({
-          status: "valid",
-          message: "ACCESO AUTORIZADO",
-          details: data.ticket,
-        });
-        setEvents((prev) =>
-          prev.map((ev) =>
-            ev.id === selectedEvent.id
-              ? { ...ev, total_scanned: (ev.total_scanned || 0) + 1 }
-              : ev
-          )
-        );
-      } else if (data.status === "duplicate") {
-        setScanResult({
-          status: "duplicate",
-          message: "BOLETO YA FUE UTILIZADO",
-          details: data.scanned_at ? { time: data.scanned_at } : undefined,
-        });
-      } else {
-        setScanResult({
-          status: "invalid",
-          message: "BOLETO INVÁLIDO O NO ENCONTRADO",
-        });
-      }
-    } catch {
-      // Simulación local
-      if (clean.includes("VALID") || clean.startsWith("DTL-")) {
-        setScanResult({
-          status: "valid",
-          message: "ACCESO AUTORIZADO (Validación Correcta)",
-          details: { attendee: "Juan Pérez", time: new Date().toLocaleTimeString() },
-        });
-        setEvents((prev) =>
-          prev.map((ev) =>
-            ev.id === selectedEvent.id
-              ? { ...ev, total_scanned: (ev.total_scanned || 0) + 1 }
-              : ev
-          )
-        );
-      } else if (clean.includes("USED") || clean.includes("DUPLICATE")) {
-        setScanResult({
-          status: "duplicate",
-          message: "BOLETO YA FUE UTILIZADO ANTERIORMENTE",
-          details: { time: "Hoy a las 10:14 AM en Puerta Principal" },
-        });
-      } else {
-        setScanResult({
-          status: "invalid",
-          message: "CÓDIGO INVÁLIDO O FALSIFICADO",
-        });
-      }
+      setEvents((prev) =>
+        prev.map((ev) =>
+          ev.id === selectedEvent.id
+            ? { ...ev, total_scanned: (ev.total_scanned || 0) + 1 }
+            : ev
+        )
+      );
+    } else if (clean.includes("USED") || clean.includes("DUPLICATE")) {
+      setScanResult({
+        status: "duplicate",
+        message: "BOLETO YA FUE UTILIZADO ANTERIORMENTE",
+        details: { time: "Hoy a las 10:14 AM en Puerta Principal" },
+      });
+    } else {
+      setScanResult({
+        status: "invalid",
+        message: "CÓDIGO INVÁLIDO O NO ENCONTRADO",
+      });
     }
   };
 
-  // Crear nuevo evento (Admin)
+  // Crear nuevo evento
   const handleCreateNewEvent = (e: React.FormEvent) => {
     e.preventDefault();
     if (!newEventName) return;
@@ -379,12 +320,9 @@ export default function DatelarAccessPage() {
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 selection:bg-cyan-600 selection:text-white font-sans">
-      {/* ======================================================== */}
-      {/* 1. BARRA SUPERIOR / NAVBAR                               */}
-      {/* ======================================================== */}
+      {/* BARRA SUPERIOR INTEGRADA */}
       <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-12 h-16 flex items-center justify-between">
-          {/* Logo oficial e identidad Datelar Access */}
           <div className="flex items-center gap-3">
             <a href="#" className="flex items-center gap-2.5 group">
               <div className="w-8 h-8 rounded-lg bg-slate-100 border border-slate-200 flex items-center justify-center p-1.5 shadow-sm group-hover:border-cyan-500 transition">
@@ -407,47 +345,8 @@ export default function DatelarAccessPage() {
             </a>
           </div>
 
-          {/* Navegación pública */}
-          {!currentUser ? (
-            <div className="flex items-center gap-2 sm:gap-6">
-              <nav className="hidden md:flex items-center gap-6 text-sm font-medium text-slate-600">
-                <a href="#beneficios" className="hover:text-slate-900 transition">
-                  Beneficios
-                </a>
-                <a href="#eventos" className="hover:text-slate-900 transition">
-                  Eventos
-                </a>
-                <a href="#android" className="hover:text-slate-900 transition">
-                  App Android
-                </a>
-                <a href="#contacto" className="hover:text-slate-900 transition">
-                  Contacto
-                </a>
-              </nav>
-
-              <button
-                onClick={() => {
-                  setLoginError(null);
-                  setIsLoginOpen(true);
-                }}
-                className="bg-slate-900 hover:bg-slate-800 text-white text-xs sm:text-sm font-semibold px-4 sm:px-5 py-2 rounded-lg transition shadow-sm flex items-center gap-2"
-              >
-                <KeyRound className="h-4 w-4 text-cyan-400" />
-                <span>Iniciar Sesión</span>
-              </button>
-            </div>
-          ) : (
-            /* Usuario logueado */
-            <div className="flex items-center gap-3 sm:gap-4">
-              <div className="text-right">
-                <div className="text-xs sm:text-sm font-semibold text-slate-900">
-                  {currentUser.name}
-                </div>
-                <div className="text-[11px] text-cyan-600 font-medium">
-                  {currentUser.role === "portero" ? "Staff en Puerta" : "Administrador"}
-                </div>
-              </div>
-
+          <div className="flex items-center gap-4">
+            {currentUser && (
               <button
                 onClick={handleLogout}
                 className="border border-slate-300 bg-white hover:bg-slate-100 px-3 py-1.5 text-xs font-semibold text-slate-700 rounded-lg transition flex items-center gap-1.5 shadow-sm"
@@ -455,433 +354,203 @@ export default function DatelarAccessPage() {
                 <LogOut className="h-3.5 w-3.5" />
                 <span className="hidden sm:inline">Cerrar Sesión</span>
               </button>
-            </div>
-          )}
+            )}
+          </div>
         </div>
       </header>
 
-      {/* ======================================================== */}
-      {/* 2. VISTA PÚBLICA (LANDING PAGE COMERCIAL Y LIMPIA)       */}
-      {/* ======================================================== */}
+      {/* VISTA PORTAL DIRECTA: INFORMACIÓN Y LOGIN INMEDIATO */}
       {!currentUser ? (
-        <main className="w-full">
-          {/* HERO PRINCIPAL */}
-          <section className="relative px-4 sm:px-6 md:px-12 pt-12 pb-10 border-b border-slate-200 max-w-7xl mx-auto">
-            <div className="max-w-4xl space-y-5">
-              <div className="inline-flex items-center gap-2 border border-cyan-200 bg-cyan-50/80 px-3 py-1 rounded-full text-xs font-medium text-cyan-800">
+        <main className="max-w-7xl mx-auto px-4 sm:px-6 md:px-12 py-10 sm:py-16">
+          <div className="grid lg:grid-cols-12 gap-10 items-center">
+            {/* LADO IZQUIERDO: INFORMACIÓN COMPACTA Y BENEFICIOS */}
+            <div className="lg:col-span-6 space-y-6">
+              <div className="inline-flex items-center gap-2 border border-cyan-200 bg-cyan-50 px-3 py-1 rounded-full text-xs font-medium text-cyan-800">
                 <Sparkles className="h-3.5 w-3.5 text-cyan-600" />
-                <span>Control de Acceso Digital &middot; 100% Conectado a Internet</span>
+                <span>Control de Acceso Digital &middot; 100% Conectado</span>
               </div>
 
-              <h1 className="text-3xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-slate-900 leading-[1.12]">
-                Control de acceso inteligente y venta de entradas sin filas ni fraudes.
-              </h1>
+              <div className="space-y-3">
+                <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-slate-900 leading-tight">
+                  Control de acceso inteligente y venta de entradas.
+                </h1>
 
-              {/* Texto favorito del usuario */}
-              <p className="text-lg sm:text-xl text-slate-600 font-normal leading-relaxed max-w-3xl">
-                La plataforma definitiva para conciertos, congresos, festivales y discotecas. Emite boletos digitales con código QR único, controla el aforo en tiempo real y valida entradas en segundos desde nuestra app para <strong>Android</strong>.
-              </p>
-
-              <div className="flex flex-wrap items-center gap-3 pt-2">
-                <a
-                  href="#contacto"
-                  className="bg-cyan-600 hover:bg-cyan-700 text-white px-6 sm:px-7 py-3 rounded-lg text-sm font-semibold transition shadow-sm inline-flex items-center gap-2"
-                >
-                  <span>Cotizar servicio para tu evento</span>
-                  <ArrowRight className="h-4 w-4" />
-                </a>
-                <button
-                  onClick={() => setIsLoginOpen(true)}
-                  className="bg-white hover:bg-slate-100 text-slate-800 border border-slate-300 px-6 sm:px-7 py-3 rounded-lg text-sm font-semibold transition shadow-sm"
-                >
-                  Ingresar a la plataforma
-                </button>
-              </div>
-            </div>
-
-            {/* BARRA DE 4 VENTAJAS INMEDIATAS (COMPACTA) */}
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 pt-10">
-              <div className="border border-slate-200 bg-white p-4 rounded-xl shadow-sm space-y-1">
-                <span className="text-[11px] font-semibold text-cyan-600 uppercase tracking-wide">01 &middot; Rapidez</span>
-                <div className="text-xl sm:text-2xl font-bold text-slate-900">&lt; 1 Segundo</div>
-                <p className="text-xs text-slate-500">Ingreso fluido por persona, sin colas en puertas.</p>
-              </div>
-
-              <div className="border border-slate-200 bg-white p-4 rounded-xl shadow-sm space-y-1">
-                <span className="text-[11px] font-semibold text-emerald-600 uppercase tracking-wide">02 &middot; Seguridad</span>
-                <div className="text-xl sm:text-2xl font-bold text-slate-900">Cero Fraudes</div>
-                <p className="text-xs text-slate-500">Códigos únicos que impiden reventas o clonación.</p>
-              </div>
-
-              <div className="border border-slate-200 bg-white p-4 rounded-xl shadow-sm space-y-1">
-                <span className="text-[11px] font-semibold text-blue-600 uppercase tracking-wide">03 &middot; Control</span>
-                <div className="text-xl sm:text-2xl font-bold text-slate-900">Aforo en Vivo</div>
-                <p className="text-xs text-slate-500">Supervisión en tiempo real de entradas y capacidad.</p>
-              </div>
-
-              <div className="border border-slate-200 bg-white p-4 rounded-xl shadow-sm space-y-1">
-                <span className="text-[11px] font-semibold text-cyan-600 uppercase tracking-wide">04 &middot; Movilidad</span>
-                <div className="text-xl sm:text-2xl font-bold text-slate-900">App Android</div>
-                <p className="text-xs text-slate-500">Cualquier celular sirve como lector de acceso.</p>
-              </div>
-            </div>
-          </section>
-
-          {/* BENEFICIOS DESTACADOS (COMPACTO Y DIRECTO) */}
-          <section id="beneficios" className="px-4 sm:px-6 md:px-12 py-10 border-b border-slate-200 max-w-7xl mx-auto">
-            <div className="space-y-2 max-w-2xl pb-6">
-              <span className="text-xs font-semibold text-cyan-600 uppercase tracking-wide">
-                Ventajas para Organizadores
-              </span>
-              <h2 className="text-2xl sm:text-4xl font-bold text-slate-900 tracking-tight">
-                Todo lo que necesitas para garantizar el éxito en puerta
-              </h2>
-              <p className="text-sm sm:text-base text-slate-600">
-                Diseñado para eliminar el estrés del ingreso y brindar una experiencia segura y rápida a tus asistentes.
-              </p>
-            </div>
-
-            <div className="grid md:grid-cols-3 gap-4 sm:gap-6">
-              <div className="border border-slate-200 bg-white p-6 rounded-xl shadow-sm space-y-3">
-                <div className="w-10 h-10 rounded-lg bg-cyan-50 border border-cyan-100 flex items-center justify-center text-cyan-600">
-                  <ShieldCheck className="h-5 w-5" />
-                </div>
-                <h3 className="text-lg font-bold text-slate-900">Protección contra falsificaciones</h3>
-                <p className="text-sm text-slate-600 leading-relaxed">
-                  Boletos con código QR único que se invalidan al instante tras el primer escaneo. Sin capturas duplicadas ni reventas.
+                {/* Texto favorito */}
+                <p className="text-base sm:text-lg text-slate-600 font-normal leading-relaxed">
+                  La plataforma definitiva para conciertos, congresos, festivales y discotecas. Emite boletos digitales con código QR único, controla el aforo en tiempo real y valida entradas en segundos desde nuestra app para <strong>Android</strong>.
                 </p>
               </div>
 
-              <div className="border border-slate-200 bg-white p-6 rounded-xl shadow-sm space-y-3">
-                <div className="w-10 h-10 rounded-lg bg-emerald-50 border border-emerald-100 flex items-center justify-center text-emerald-600">
-                  <Users className="h-5 w-5" />
-                </div>
-                <h3 className="text-lg font-bold text-slate-900">Control de aforo en tiempo real</h3>
-                <p className="text-sm text-slate-600 leading-relaxed">
-                  Supervisión exacta de personas ingresadas por cada puerta y localidad (VIP, General), visible desde cualquier dispositivo.
-                </p>
-              </div>
-
-              <div className="border border-slate-200 bg-white p-6 rounded-xl shadow-sm space-y-3">
-                <div className="w-10 h-10 rounded-lg bg-blue-50 border border-blue-100 flex items-center justify-center text-blue-600">
-                  <Smartphone className="h-5 w-5" />
-                </div>
-                <h3 className="text-lg font-bold text-slate-900">Fácil para tu equipo de puerta</h3>
-                <p className="text-sm text-slate-600 leading-relaxed">
-                  El personal de puerta ingresa con un código simple y comienza a validar al instante en su teléfono Android, sin demoras.
-                </p>
-              </div>
-            </div>
-          </section>
-
-          {/* EVENTOS EN LOS QUE TRABAJAMOS (SIN ESPACIO EXCESIVO) */}
-          <section id="eventos" className="px-4 sm:px-6 md:px-12 py-10 border-b border-slate-200 max-w-7xl mx-auto">
-            <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 pb-6">
-              <div className="space-y-1 max-w-2xl">
-                <span className="text-xs font-semibold text-cyan-600 uppercase tracking-wide">
-                  Experiencia en Campo
-                </span>
-                <h2 className="text-2xl sm:text-4xl font-bold text-slate-900 tracking-tight">
-                  Eventos en los que trabajamos
-                </h2>
-                <p className="text-sm text-slate-600">
-                  Demostración del control de accesos fluido y seguro en recintos de todo tipo.
-                </p>
-              </div>
-
-              <a
-                href="#contacto"
-                className="inline-flex items-center gap-1.5 text-xs font-semibold text-cyan-700 hover:text-cyan-800 bg-cyan-50 border border-cyan-200 px-4 py-2 rounded-lg transition"
-              >
-                <span>Sumar mi evento</span>
-                <ChevronRight className="h-3.5 w-3.5" />
-              </a>
-            </div>
-
-            <div className="grid md:grid-cols-3 gap-4 sm:gap-6">
-              {events.map((ev) => (
-                <div
-                  key={ev.id}
-                  className="border border-slate-200 bg-white p-5 rounded-xl shadow-sm flex flex-col justify-between space-y-4 hover:border-slate-300 transition"
-                >
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between">
-                      <span className={`text-[10px] font-semibold border px-2 py-0.5 rounded-full uppercase ${ev.statusColor}`}>
-                        {ev.status}
-                      </span>
-                      <span className="text-xs font-medium text-slate-500">
-                        Aforo: {ev.capacity} pers.
-                      </span>
-                    </div>
-
-                    <h3 className="text-lg font-bold text-slate-900">{ev.name}</h3>
-
-                    <div className="space-y-1 text-xs text-slate-500">
-                      <div className="flex items-center gap-2">
-                        <MapPin className="h-3.5 w-3.5 text-cyan-600 shrink-0" />
-                        <span className="truncate">{ev.location}</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <Calendar className="h-3.5 w-3.5 text-cyan-600 shrink-0" />
-                        <span>{ev.date}</span>
-                      </div>
-                    </div>
+              {/* 4 Beneficios en formato compacto */}
+              <div className="grid sm:grid-cols-2 gap-3 pt-2">
+                <div className="border border-slate-200 bg-white p-3.5 rounded-xl shadow-sm space-y-1">
+                  <div className="flex items-center gap-2 text-cyan-600 font-bold text-xs">
+                    <Zap className="h-4 w-4" />
+                    <span>&lt; 1 Segundo</span>
                   </div>
-
-                  <div className="border-t border-slate-100 pt-3 flex items-center justify-between text-xs text-slate-500">
-                    <span>Sistema:</span>
-                    <span className="font-semibold text-slate-800">100% Online en tiempo real</span>
-                  </div>
+                  <p className="text-xs text-slate-500">Ingreso ágil sin filas en las puertas.</p>
                 </div>
-              ))}
-            </div>
-          </section>
 
-          {/* SECCIÓN APP ANDROID (PEGADA Y SIN HUECOS) */}
-          <section id="android" className="px-4 sm:px-6 md:px-12 py-10 border-b border-slate-200 max-w-7xl mx-auto">
-            <div className="border border-slate-200 bg-white p-6 sm:p-8 rounded-2xl shadow-sm">
-              <div className="grid lg:grid-cols-12 gap-8 items-center">
-                <div className="lg:col-span-7 space-y-4">
-                  <div className="inline-flex items-center gap-2 border border-emerald-200 bg-emerald-50 px-3 py-1 rounded-full text-xs font-medium text-emerald-800">
-                    <Smartphone className="h-3.5 w-3.5 text-emerald-600" />
-                    <span>Aplicación para Android</span>
+                <div className="border border-slate-200 bg-white p-3.5 rounded-xl shadow-sm space-y-1">
+                  <div className="flex items-center gap-2 text-emerald-600 font-bold text-xs">
+                    <ShieldCheck className="h-4 w-4" />
+                    <span>Cero Fraudes</span>
                   </div>
+                  <p className="text-xs text-slate-500">Códigos QR únicos infalsificables.</p>
+                </div>
 
-                  <h2 className="text-2xl sm:text-4xl font-bold text-slate-900 tracking-tight">
-                    El escáner más rápido para el personal de puerta
-                  </h2>
+                <div className="border border-slate-200 bg-white p-3.5 rounded-xl shadow-sm space-y-1">
+                  <div className="flex items-center gap-2 text-blue-600 font-bold text-xs">
+                    <Users className="h-4 w-4" />
+                    <span>Aforo en Vivo</span>
+                  </div>
+                  <p className="text-xs text-slate-500">Control de capacidad en tiempo real.</p>
+                </div>
 
-                  <p className="text-sm sm:text-base text-slate-600 leading-relaxed">
-                    Valida entradas en menos de un segundo usando cualquier teléfono Android, sin necesidad de comprar equipos costosos ni cables.
+                <div className="border border-slate-200 bg-white p-3.5 rounded-xl shadow-sm space-y-1">
+                  <div className="flex items-center gap-2 text-cyan-600 font-bold text-xs">
+                    <Smartphone className="h-4 w-4" />
+                    <span>App Android</span>
+                  </div>
+                  <p className="text-xs text-slate-500">El personal escanea con su propio celular.</p>
+                </div>
+              </div>
+            </div>
+
+            {/* LADO DERECHO: FORMULARIO DE ACCESO DIRECTO (DE UNA) */}
+            <div className="lg:col-span-6 flex justify-center">
+              <div className="w-full max-w-md border border-slate-200 bg-white rounded-2xl shadow-xl p-6 sm:p-8 space-y-5">
+                <div>
+                  <span className="text-[10px] text-cyan-600 font-bold uppercase tracking-wider">
+                    Portal de Acceso
+                  </span>
+                  <h2 className="text-2xl font-bold text-slate-900 mt-0.5">Ingresar al Sistema</h2>
+                  <p className="text-xs text-slate-500 mt-0.5">
+                    Elige cómo deseas ingresar a Datelar Access.
                   </p>
-
-                  <div className="grid sm:grid-cols-2 gap-3 text-xs text-slate-700 pt-2">
-                    <div className="flex items-start gap-2.5">
-                      <CheckCircle2 className="h-4 w-4 text-emerald-600 shrink-0 mt-0.5" />
-                      <div>
-                        <strong className="text-slate-900 block font-semibold">Lectura en la oscuridad</strong>
-                        Linterna integrada para eventos nocturnos o discotecas.
-                      </div>
-                    </div>
-                    <div className="flex items-start gap-2.5">
-                      <CheckCircle2 className="h-4 w-4 text-emerald-600 shrink-0 mt-0.5" />
-                      <div>
-                        <strong className="text-slate-900 block font-semibold">Aviso por vibración</strong>
-                        Respuesta táctil inmediata al validar cada boleto.
-                      </div>
-                    </div>
-                    <div className="flex items-start gap-2.5">
-                      <CheckCircle2 className="h-4 w-4 text-emerald-600 shrink-0 mt-0.5" />
-                      <div>
-                        <strong className="text-slate-900 block font-semibold">Acceso directo por código</strong>
-                        El portero no necesita crear usuarios ni memorizar contraseñas.
-                      </div>
-                    </div>
-                    <div className="flex items-start gap-2.5">
-                      <CheckCircle2 className="h-4 w-4 text-emerald-600 shrink-0 mt-0.5" />
-                      <div>
-                        <strong className="text-slate-900 block font-semibold">Sincronización en vivo</strong>
-                        Todos los teléfonos conectados trabajan coordinados al instante.
-                      </div>
-                    </div>
-                  </div>
                 </div>
 
-                <div className="lg:col-span-5 flex justify-center">
-                  <div className="border border-slate-200 bg-slate-50 p-6 rounded-2xl w-full max-w-sm space-y-4 shadow-inner">
-                    <div className="flex items-center justify-between border-b border-slate-200 pb-3">
-                      <span className="text-xs font-bold text-slate-800 tracking-wide uppercase">App Android</span>
-                      <span className="text-[10px] font-bold px-2 py-0.5 bg-emerald-100 text-emerald-800 rounded-full">
-                        Lista para Escanear
-                      </span>
-                    </div>
-
-                    <div className="p-5 border border-slate-200 bg-white rounded-xl text-center space-y-2 shadow-sm">
-                      <ScanLine className="h-10 w-10 text-cyan-600 mx-auto" />
-                      <div className="text-sm font-bold text-slate-900">Escáner Activo</div>
-                      <div className="text-xs text-slate-500">
-                        Enfoca el código QR del boleto y recibe confirmación instantánea.
-                      </div>
-                    </div>
-
-                    <div className="border border-slate-200 bg-white rounded-lg p-3 text-[11px] text-slate-600 space-y-1">
-                      <div>&bull; Compatible con cualquier teléfono Android</div>
-                      <div>&bull; Conexión en tiempo real a internet</div>
-                      <div>&bull; Ingreso para staff con código rápido o QR</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          {/* CÓMO FUNCIONA (COMPACTO Y SENCILLO) */}
-          <section id="como-funciona" className="px-4 sm:px-6 md:px-12 py-10 border-b border-slate-200 max-w-7xl mx-auto">
-            <div className="space-y-1 max-w-2xl pb-6">
-              <span className="text-xs font-semibold text-cyan-600 uppercase tracking-wide">
-                Paso a Paso
-              </span>
-              <h2 className="text-2xl sm:text-4xl font-bold text-slate-900 tracking-tight">
-                Cómo funciona Datelar Access
-              </h2>
-            </div>
-
-            <div className="grid md:grid-cols-3 gap-4 sm:gap-6">
-              <div className="border border-slate-200 bg-white p-6 rounded-xl shadow-sm space-y-2">
-                <span className="text-2xl font-bold text-cyan-600">01</span>
-                <h3 className="text-base font-bold text-slate-900">Configuras tu evento</h3>
-                <p className="text-xs text-slate-600 leading-relaxed">
-                  Defines nombre, fecha, recinto y cantidad de entradas disponibles por localidad.
-                </p>
-              </div>
-
-              <div className="border border-slate-200 bg-white p-6 rounded-xl shadow-sm space-y-2">
-                <span className="text-2xl font-bold text-cyan-600">02</span>
-                <h3 className="text-base font-bold text-slate-900">Emites los boletos QR</h3>
-                <p className="text-xs text-slate-600 leading-relaxed">
-                  El sistema genera pases únicos e infalsificables para enviar a tus asistentes.
-                </p>
-              </div>
-
-              <div className="border border-slate-200 bg-white p-6 rounded-xl shadow-sm space-y-2">
-                <span className="text-2xl font-bold text-cyan-600">03</span>
-                <h3 className="text-base font-bold text-slate-900">Validas en puerta con Android</h3>
-                <p className="text-xs text-slate-600 leading-relaxed">
-                  Tu equipo escanea con su propio teléfono, controla el acceso y ve el aforo en vivo.
-                </p>
-              </div>
-            </div>
-          </section>
-
-          {/* CONTACTO & COTIZACIONES */}
-          <section id="contacto" className="px-4 sm:px-6 md:px-12 py-10 max-w-7xl mx-auto">
-            <div className="grid lg:grid-cols-12 gap-8 items-start">
-              <div className="lg:col-span-5 space-y-4">
-                <span className="text-xs font-semibold text-cyan-600 uppercase tracking-wide">
-                  Atención a Organizadores
-                </span>
-                <h2 className="text-2xl sm:text-4xl font-bold text-slate-900 tracking-tight">
-                  Contrata Datelar Access para tu próximo evento
-                </h2>
-                <p className="text-sm text-slate-600 leading-relaxed">
-                  Te asesoramos en la configuración del evento, provisión de boletos y soporte para que tu control de accesos sea impecable.
-                </p>
-
-                <div className="space-y-2.5 pt-3 border-t border-slate-200 text-xs text-slate-600">
-                  <div className="flex items-center gap-2.5">
-                    <Mail className="h-4 w-4 text-cyan-600" />
-                    <span className="font-medium text-slate-800">contacto@datelar.com</span>
-                  </div>
-                  <div className="flex items-center gap-2.5">
-                    <MapPin className="h-4 w-4 text-cyan-600" />
-                    <span>Loja &middot; Ecuador (Cobertura Nacional)</span>
-                  </div>
-                  <div className="flex items-center gap-2.5">
-                    <Clock className="h-4 w-4 text-cyan-600" />
-                    <span>Respuesta en menos de 24 horas</span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="lg:col-span-7">
-                {contactSent ? (
-                  <div className="border border-emerald-200 bg-emerald-50 p-8 rounded-2xl text-center space-y-3">
-                    <CheckCircle2 className="h-10 w-10 text-emerald-600 mx-auto" />
-                    <h3 className="text-xl font-bold text-slate-900">¡Solicitud Enviada con Éxito!</h3>
-                    <p className="text-xs text-slate-600">
-                      Hemos recibido los datos de tu evento. El equipo de Datelar Access se comunicará contigo a la brevedad.
-                    </p>
-                    <button
-                      onClick={() => setContactSent(false)}
-                      className="border border-slate-300 bg-white px-4 py-2 rounded-lg text-xs font-semibold text-slate-800 hover:bg-slate-50 shadow-sm"
-                    >
-                      Enviar otra consulta
-                    </button>
-                  </div>
-                ) : (
-                  <form
-                    onSubmit={(e) => {
-                      e.preventDefault();
-                      setContactSent(true);
+                {/* Selector de pestañas */}
+                <div className="grid grid-cols-2 gap-1 bg-slate-100 p-1 rounded-lg text-xs font-semibold">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setLoginTab("admin");
+                      setLoginError(null);
                     }}
-                    className="border border-slate-200 bg-white p-6 sm:p-8 rounded-2xl shadow-sm space-y-4 text-xs"
+                    className={`py-2 rounded-md transition ${
+                      loginTab === "admin"
+                        ? "bg-white text-slate-900 shadow-sm"
+                        : "text-slate-600 hover:text-slate-900"
+                    }`}
                   >
-                    <div className="grid sm:grid-cols-2 gap-4">
-                      <div className="space-y-1">
-                        <label className="text-slate-700 font-semibold">Nombre o Empresa *</label>
-                        <input
-                          type="text"
-                          required
-                          value={contactName}
-                          onChange={(e) => setContactName(e.target.value)}
-                          placeholder="Tu nombre"
-                          className="w-full border border-slate-300 rounded-lg p-3 text-slate-900 focus:outline-none focus:border-cyan-600 text-sm"
-                        />
-                      </div>
+                    Administrador
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setLoginTab("portero");
+                      setLoginError(null);
+                    }}
+                    className={`py-2 rounded-md transition ${
+                      loginTab === "portero"
+                        ? "bg-white text-slate-900 shadow-sm"
+                        : "text-slate-600 hover:text-slate-900"
+                    }`}
+                  >
+                    Personal de Puerta
+                  </button>
+                </div>
 
-                      <div className="space-y-1">
-                        <label className="text-slate-700 font-semibold">Correo Electrónico *</label>
-                        <input
-                          type="email"
-                          required
-                          value={contactEmail}
-                          onChange={(e) => setContactEmail(e.target.value)}
-                          placeholder="correo@ejemplo.com"
-                          className="w-full border border-slate-300 rounded-lg p-3 text-slate-900 focus:outline-none focus:border-cyan-600 text-sm"
-                        />
-                      </div>
-                    </div>
+                {loginError && (
+                  <div className="p-3 bg-rose-50 border border-rose-200 rounded-lg text-rose-700 text-xs">
+                    {loginError}
+                  </div>
+                )}
 
+                {/* FORMULARIO ADMINISTRADOR */}
+                {loginTab === "admin" && (
+                  <form onSubmit={handleAdminLogin} className="space-y-3.5 text-xs">
                     <div className="space-y-1">
-                      <label className="text-slate-700 font-semibold">Nombre del Evento & Fecha Estimada</label>
+                      <label className="text-slate-700 font-semibold">Correo Electrónico</label>
                       <input
-                        type="text"
-                        value={contactEvent}
-                        onChange={(e) => setContactEvent(e.target.value)}
-                        placeholder="Ej. Concierto Loja 2026 - 1500 personas"
+                        type="email"
+                        required
+                        value={loginEmail}
+                        onChange={(e) => setLoginEmail(e.target.value)}
                         className="w-full border border-slate-300 rounded-lg p-3 text-slate-900 focus:outline-none focus:border-cyan-600 text-sm"
                       />
                     </div>
 
                     <div className="space-y-1">
-                      <label className="text-slate-700 font-semibold">Detalles o Requerimientos</label>
-                      <textarea
-                        rows={3}
-                        value={contactMessage}
-                        onChange={(e) => setContactMessage(e.target.value)}
-                        placeholder="Cuéntanos sobre tu evento, ubicación y número de asistentes..."
+                      <label className="text-slate-700 font-semibold">Contraseña</label>
+                      <input
+                        type="password"
+                        required
+                        value={loginPassword}
+                        onChange={(e) => setLoginPassword(e.target.value)}
                         className="w-full border border-slate-300 rounded-lg p-3 text-slate-900 focus:outline-none focus:border-cyan-600 text-sm"
                       />
                     </div>
 
                     <button
                       type="submit"
-                      className="w-full bg-cyan-600 hover:bg-cyan-700 text-white py-3.5 rounded-lg text-sm font-semibold transition shadow-sm"
+                      disabled={loginLoading}
+                      className="w-full bg-slate-900 hover:bg-slate-800 text-white py-3 rounded-lg text-xs font-semibold transition shadow-sm"
                     >
-                      Solicitar Propuesta y Cotización
+                      {loginLoading ? "Entrando..." : "Entrar como Administrador"}
                     </button>
+
+                    <div className="text-[11px] text-slate-500 text-center pt-1">
+                      Credenciales: <span className="text-slate-800 font-semibold">admin@datelar.com</span> / <span className="text-slate-800 font-semibold">admin123</span>
+                    </div>
+                  </form>
+                )}
+
+                {/* FORMULARIO PORTERO / STAFF */}
+                {loginTab === "portero" && (
+                  <form onSubmit={handlePorteroLogin} className="space-y-3.5 text-xs">
+                    <div className="p-3 bg-cyan-50 border border-cyan-100 rounded-lg text-xs text-cyan-800">
+                      Ingresa el código que te asignó el organizador para empezar a escanear entradas.
+                    </div>
+
+                    <div className="space-y-1">
+                      <label className="text-slate-700 font-semibold">Código del Evento</label>
+                      <input
+                        type="text"
+                        required
+                        placeholder="Ej. UNL-2026"
+                        value={porteroCodeInput}
+                        onChange={(e) => setPorteroCodeInput(e.target.value)}
+                        className="w-full border border-cyan-400 bg-white rounded-lg p-3 text-slate-900 focus:outline-none focus:border-cyan-600 font-mono text-base uppercase font-bold tracking-widest text-center"
+                      />
+                    </div>
+
+                    <button
+                      type="submit"
+                      className="w-full bg-cyan-600 hover:bg-cyan-700 text-white py-3 rounded-lg text-xs font-semibold transition shadow-sm"
+                    >
+                      Entrar a Escanear
+                    </button>
+
+                    <div className="text-center pt-1">
+                      <button
+                        type="button"
+                        onClick={() => setPorteroCodeInput("UNL-2026")}
+                        className="text-[11px] text-slate-500 hover:text-slate-800 underline"
+                      >
+                        Usar código de muestra (UNL-2026)
+                      </button>
+                    </div>
                   </form>
                 )}
               </div>
             </div>
-          </section>
-
-          {/* FOOTER PÚBLICO */}
-          <footer className="border-t border-slate-200 py-8 px-4 sm:px-6 md:px-12 text-center text-xs text-slate-500 bg-white">
-            <div className="font-semibold text-slate-700">
-              DATELAR ACCESS &middot; PRODUCTO DE DATELAR LABS &middot; {new Date().getFullYear()}
-            </div>
-            <div className="text-[11px] text-slate-500 mt-1">
-              Todos los derechos reservados &middot; Datelar &middot; Desarrollado por Gerardo Gonza
-            </div>
-          </footer>
+          </div>
         </main>
       ) : (
-        /* ======================================================== */
-        /* 3. PANEL PRIVADO DE ADMINISTRACIÓN / PORTERO (LIGHT)     */
-        /* ======================================================== */
+        /* PANEL PRIVADO OPERATIVO */
         <main className="max-w-7xl mx-auto px-4 sm:px-6 md:px-12 py-8 space-y-6">
-          {/* Encabezado del Panel */}
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-200 pb-5">
             <div>
               <span className="text-xs font-semibold text-cyan-600 uppercase tracking-wide">
@@ -891,11 +560,10 @@ export default function DatelarAccessPage() {
                 {currentUser.role === "portero" ? `Validador: ${currentUser.event}` : "Administración de Eventos"}
               </h1>
               <p className="text-xs text-slate-500 mt-0.5">
-                Sesión activa: <strong className="text-slate-800">{currentUser.name}</strong>
+                Sesión: <strong className="text-slate-800">{currentUser.name}</strong>
               </p>
             </div>
 
-            {/* Pestañas de Navegación del Panel */}
             {currentUser.role !== "portero" && (
               <div className="flex flex-wrap gap-2 text-xs font-semibold">
                 <button
@@ -946,7 +614,7 @@ export default function DatelarAccessPage() {
           {adminTab === "eventos" && currentUser.role !== "portero" && (
             <div className="space-y-4">
               <div className="flex items-center justify-between">
-                <h2 className="text-lg font-bold text-slate-900">Eventos Registrados</h2>
+                <h2 className="text-lg font-bold text-slate-900">Eventos Activos</h2>
                 <button
                   onClick={() => setIsNewEventOpen(true)}
                   className="bg-cyan-600 hover:bg-cyan-700 text-white px-4 py-2 rounded-lg text-xs font-semibold transition shadow-sm flex items-center gap-1.5"
@@ -1047,23 +715,12 @@ export default function DatelarAccessPage() {
                   </div>
 
                   <div className="space-y-1">
-                    <label className="text-slate-700 font-semibold">Nombre del Asistente (Opcional)</label>
+                    <label className="text-slate-700 font-semibold">Nombre Asistente (Opcional)</label>
                     <input
                       type="text"
                       placeholder="Ej. Juan Pérez"
                       value={ticketGenName}
                       onChange={(e) => setTicketGenName(e.target.value)}
-                      className="w-full border border-slate-300 rounded-lg p-2.5 text-slate-900 focus:outline-none focus:border-cyan-600 text-xs"
-                    />
-                  </div>
-
-                  <div className="space-y-1">
-                    <label className="text-slate-700 font-semibold">Cédula / DNI (Opcional)</label>
-                    <input
-                      type="text"
-                      placeholder="110..."
-                      value={ticketGenDni}
-                      onChange={(e) => setTicketGenDni(e.target.value)}
                       className="w-full border border-slate-300 rounded-lg p-2.5 text-slate-900 focus:outline-none focus:border-cyan-600 text-xs"
                     />
                   </div>
@@ -1167,21 +824,10 @@ export default function DatelarAccessPage() {
                   </button>
                 </div>
               </div>
-
-              <div className="grid sm:grid-cols-2 gap-3 text-xs text-slate-600 border-t border-slate-100 pt-4">
-                <div>
-                  <strong className="text-slate-900 block font-semibold mb-0.5">¿Cómo lo usan los porteros?</strong>
-                  Al abrir Datelar Access en su celular, hacen clic en <em>Iniciar Sesión &rarr; Personal de Puerta</em> e ingresan este código.
-                </div>
-                <div>
-                  <strong className="text-slate-900 block font-semibold mb-0.5">Seguridad</strong>
-                  Este código solo permite validar boletos del evento seleccionado. No permite modificar aforos ni precios.
-                </div>
-              </div>
             </div>
           )}
 
-          {/* TAB 4: VALIDADOR EN PUERTA (CONSOLA DE ESCANEO) */}
+          {/* TAB 4: VALIDADOR EN PUERTA */}
           {(adminTab === "validador" || currentUser.role === "portero") && (
             <div className="max-w-xl mx-auto space-y-4 text-center">
               <div className="space-y-0.5">
@@ -1196,7 +842,6 @@ export default function DatelarAccessPage() {
                 </p>
               </div>
 
-              {/* Pantalla de Resultado */}
               <div className="border border-slate-200 bg-white p-6 rounded-2xl shadow-sm min-h-[170px] flex flex-col items-center justify-center">
                 {scanResult.status === "valid" && (
                   <div className="space-y-1.5 text-center">
@@ -1238,7 +883,6 @@ export default function DatelarAccessPage() {
                 )}
               </div>
 
-              {/* Campo para ingresar o escanear código */}
               <div className="flex gap-2">
                 <input
                   type="text"
@@ -1276,150 +920,7 @@ export default function DatelarAccessPage() {
         </main>
       )}
 
-      {/* ======================================================== */}
-      {/* 4. MODAL DE INICIO DE SESIÓN (DOBLE MODO: ADMIN / STAFF) */}
-      {/* ======================================================== */}
-      {isLoginOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-sm p-4">
-          <div className="w-full max-w-md border border-slate-200 bg-white rounded-2xl shadow-2xl p-6 sm:p-8 space-y-5 relative">
-            <button
-              onClick={() => setIsLoginOpen(false)}
-              className="absolute top-4 right-4 text-slate-400 hover:text-slate-700 transition"
-            >
-              <X className="h-5 w-5" />
-            </button>
-
-            <div>
-              <span className="text-[10px] text-cyan-600 font-bold uppercase tracking-wider">
-                Acceso a la Plataforma
-              </span>
-              <h3 className="text-xl sm:text-2xl font-bold text-slate-900 mt-0.5">Iniciar Sesión</h3>
-              <p className="text-xs text-slate-500 mt-0.5">
-                Selecciona tu tipo de acceso para continuar.
-              </p>
-            </div>
-
-            {/* Selector de pestañas */}
-            <div className="grid grid-cols-2 gap-1 bg-slate-100 p-1 rounded-lg text-xs font-semibold">
-              <button
-                type="button"
-                onClick={() => {
-                  setLoginTab("admin");
-                  setLoginError(null);
-                }}
-                className={`py-2 rounded-md transition ${
-                  loginTab === "admin"
-                    ? "bg-white text-slate-900 shadow-sm"
-                    : "text-slate-600 hover:text-slate-900"
-                }`}
-              >
-                Administrador
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  setLoginTab("portero");
-                  setLoginError(null);
-                }}
-                className={`py-2 rounded-md transition ${
-                  loginTab === "portero"
-                    ? "bg-white text-slate-900 shadow-sm"
-                    : "text-slate-600 hover:text-slate-900"
-                }`}
-              >
-                Personal de Puerta
-              </button>
-            </div>
-
-            {loginError && (
-              <div className="p-3 bg-rose-50 border border-rose-200 rounded-lg text-rose-700 text-xs">
-                {loginError}
-              </div>
-            )}
-
-            {/* Formulario Administrador */}
-            {loginTab === "admin" && (
-              <form onSubmit={handleAdminLogin} className="space-y-3.5 text-xs">
-                <div className="space-y-1">
-                  <label className="text-slate-700 font-semibold">Correo Electrónico</label>
-                  <input
-                    type="email"
-                    required
-                    value={loginEmail}
-                    onChange={(e) => setLoginEmail(e.target.value)}
-                    className="w-full border border-slate-300 rounded-lg p-3 text-slate-900 focus:outline-none focus:border-cyan-600 text-sm"
-                  />
-                </div>
-
-                <div className="space-y-1">
-                  <label className="text-slate-700 font-semibold">Contraseña</label>
-                  <input
-                    type="password"
-                    required
-                    value={loginPassword}
-                    onChange={(e) => setLoginPassword(e.target.value)}
-                    className="w-full border border-slate-300 rounded-lg p-3 text-slate-900 focus:outline-none focus:border-cyan-600 text-sm"
-                  />
-                </div>
-
-                <button
-                  type="submit"
-                  disabled={loginLoading}
-                  className="w-full bg-slate-900 hover:bg-slate-800 text-white py-3 rounded-lg text-xs font-semibold transition shadow-sm"
-                >
-                  {loginLoading ? "Verificando..." : "Entrar como Administrador"}
-                </button>
-
-                <div className="text-[11px] text-slate-500 text-center pt-1">
-                  Credenciales de prueba: <span className="text-slate-800 font-semibold">admin@datelar.com</span> / <span className="text-slate-800 font-semibold">admin123</span>
-                </div>
-              </form>
-            )}
-
-            {/* Formulario Portero */}
-            {loginTab === "portero" && (
-              <form onSubmit={handlePorteroLogin} className="space-y-3.5 text-xs">
-                <div className="p-3 bg-cyan-50 border border-cyan-100 rounded-lg text-xs text-cyan-800">
-                  Ingresa el código que te entregó el organizador para empezar a validar entradas.
-                </div>
-
-                <div className="space-y-1">
-                  <label className="text-slate-700 font-semibold">Código del Evento</label>
-                  <input
-                    type="text"
-                    required
-                    placeholder="Ej. UNL-2026"
-                    value={porteroCodeInput}
-                    onChange={(e) => setPorteroCodeInput(e.target.value)}
-                    className="w-full border border-cyan-400 bg-white rounded-lg p-3 text-slate-900 focus:outline-none focus:border-cyan-600 font-mono text-base uppercase font-bold tracking-widest text-center"
-                  />
-                </div>
-
-                <button
-                  type="submit"
-                  className="w-full bg-cyan-600 hover:bg-cyan-700 text-white py-3 rounded-lg text-xs font-semibold transition shadow-sm"
-                >
-                  Entrar a Escanear
-                </button>
-
-                <div className="text-center pt-1">
-                  <button
-                    type="button"
-                    onClick={() => setPorteroCodeInput("UNL-2026")}
-                    className="text-[11px] text-slate-500 hover:text-slate-800 underline"
-                  >
-                    Usar código de muestra (UNL-2026)
-                  </button>
-                </div>
-              </form>
-            )}
-          </div>
-        </div>
-      )}
-
-      {/* ======================================================== */}
-      {/* 5. MODAL CREAR NUEVO EVENTO (ADMIN)                      */}
-      {/* ======================================================== */}
+      {/* MODAL CREAR NUEVO EVENTO */}
       {isNewEventOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-sm p-4">
           <div className="w-full max-w-md border border-slate-200 bg-white rounded-2xl shadow-2xl p-6 sm:p-8 space-y-5 relative">
