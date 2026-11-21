@@ -90,7 +90,7 @@ export async function POST(req: NextRequest) {
     // Modo resiliente si la Pi aún no está conectada por red
     if (email === "admin@datelar.com" && password === "admin123") {
       const token = jwt.sign(
-        { userId: "offline-superadmin", role: "superadmin", name: "Gerardo Gonza", email: "admin@datelar.com" },
+        { userId: "offline-superadmin", role: "superadmin", name: "Administrador Datelar", email: "admin@datelar.com" },
         JWT_SECRET,
         { expiresIn: "7d" }
       );
@@ -100,7 +100,7 @@ export async function POST(req: NextRequest) {
         offline_session: true,
         user: {
           id: "offline-superadmin",
-          name: "Gerardo Gonza",
+          name: "Administrador Datelar",
           email: "admin@datelar.com",
           role: "superadmin",
           organization_id: "default-org",
